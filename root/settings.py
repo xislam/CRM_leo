@@ -175,19 +175,19 @@ JAZZMIN_SETTINGS = {
     "site_brand": "EVAVC",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "/logo_EVAVC.png",
+    "site_logo": "/logo_EVAVC.jpg",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "/logo_EVAVC.png",
+    "login_logo": "/logo_EVAVC.jpg",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": "/logo_EVAVC.png",
+    "login_logo_dark": "/logo_EVAVC.jpg",
 
     # CSS classes that are applied to the logo above
-    "site_logo_classes": "/Logo_EVAVC.png",
+    "site_logo_classes": "/logo_EVAVC.jpg",
 
     # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": "/logo_EVAVC.png",
+    "site_icon": "/logo_EVAVC.jpg",
 
     # Welcome text on the login screen
     "welcome_sign": "Welcome to the  EVAVC",
