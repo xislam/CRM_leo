@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Student, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, BeforeUniversity, University, \
     Course, StudentCV, GroupStudent, Project, Comment, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
-    TaskStudent, AnswersStudent, TaskStatusStudent, ChapterFree, UnderSectionFree, DataKnowledgeFree, Chapter, \
+    TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
     UnderSection, DataKnowledge
 
 
@@ -125,27 +125,6 @@ class TaskStatusStudentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ChapterFreeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChapterFree
-        fields = '__all__'
-
-
-class UnderSectionFreeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UnderSectionFree
-        fields = '__all__'
-
-
-class DataKnowledgeFreeSerializer(serializers.ModelSerializer):
-    chapter = ChapterFreeSerializer()
-    under_section = UnderSectionFreeSerializer()
-
-    class Meta:
-        model = DataKnowledgeFree
-        fields = '__all__'
-
-
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
@@ -164,4 +143,13 @@ class DataKnowledgeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataKnowledge
+        fields = '__all__'
+
+
+class DataKnowledgeFreeSerializer(serializers.ModelSerializer):
+    chapter = ChapterSerializer()
+    under_section = UnderSectionSerializer()
+
+    class Meta:
+        model = DataKnowledgeFree
         fields = '__all__'

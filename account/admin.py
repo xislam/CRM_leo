@@ -9,7 +9,7 @@ from django.urls import reverse
 from account.models import User, Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
     University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
-    AnswerTestTask, TestTask, DataKnowledgeFree, UnderSectionFree, ChapterFree
+    AnswerTestTask, TestTask, DataKnowledgeFree
 from root import settings
 
 
@@ -89,8 +89,7 @@ admin.site.register(Chapter)
 admin.site.register(UnderSection)
 admin.site.register(DataKnowledge)
 
-admin.site.register(ChapterFree)
-admin.site.register(UnderSectionFree)
+
 admin.site.register(DataKnowledgeFree)
 
 

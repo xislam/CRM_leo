@@ -399,31 +399,12 @@ class TaskStatusStudent(models.Model):
         verbose_name_plural = 'Статус задачи студента'
 
 
-class ChapterFree(models.Model):
-    name = models.CharField(verbose_name='Раздел', max_length=150)
 
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Разделы'
-        verbose_name_plural = 'Разделы'
-
-
-class UnderSectionFree(models.Model):
-    name = models.CharField(verbose_name='Под раздел', max_length=150)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Раздел Образование'
-        verbose_name_plural = 'Раздел Образование'
 
 
 class DataKnowledgeFree(models.Model):
-    chapter = models.ForeignKey(ChapterFree, verbose_name='Раздел', on_delete=models.CASCADE)
-    under_section = models.ForeignKey(UnderSectionFree, verbose_name='Под раздел', on_delete=models.CASCADE)
+    chapter = models.ForeignKey('Chapter', verbose_name='Раздел', on_delete=models.CASCADE)
+    under_section = models.ForeignKey('UnderSection', verbose_name='Под раздел', on_delete=models.CASCADE)
     title = models.TextField(verbose_name='Тема')
     url = models.TextField(verbose_name='Ссылки')
 
