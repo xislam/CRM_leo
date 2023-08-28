@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Добавьте стили для серых дат */
+        .inactive-date {
+            color: gray;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="calendar-container" class="w-full md:w-[336px] h-[282px] border-[10px] rounded-2xl border-[#054FA5]">
+        <div class="flex justify-center items-center">
+            <svg width="24" id="prev-btn" class="cursor-pointer" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 16L10 12L14 8" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span id="current-month-year" class="text-lg uppercase"></span>
+            <svg width="24" id="next-btn" class="cursor-pointer" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 8L14 12L10 16" stroke="#202020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <table id="calendar" class=""></table>
+    </div>
+
+    <script>
+        function generateCalendar(year, month, inactiveDates) {
+            const container = document.getElementById('calendar-container');
+            const calendarTable = document.getElementById('calendar');
+            const currentMonthYear = document.getElementById('current-month-year');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            const date = new Date(year, month - 1);
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const firstDayOfWeek = new Date(year, month - 1, 1).getDay();
+
+            const weekdays = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+
+            let calendarHtml = '<tr>';
+            for (let dayIndex = 0; dayIndex < weekdays.length; dayIndex++) {
+                calendarHtml += `<th>${weekdays[dayIndex]}</th>`;
+            }
+            calendarHtml += '</tr><tr>';
+
+            let day = 1;
+            for (let i = 0; i < 42; i++) {
+                if (i >= firstDayOfWeek && day <= daysInMonth) {
+                    const currentDate = new Date(year, month - 1, day);
+                    const currentDateStr = currentDate.toISOString().split('T')[0];
+
+                    if (inactiveDates.includes(currentDateStr)) {
+                        calendarHtml += `<td class="inactive-date">${day}</td>`;
+                    } else {
+                        calendarHtml += `<td>${day}</td>`;
+                    }
+
+                    day++;
+                } else {
+                    calendarHtml += '<td></td>';
+                }
+
+                if ((i + 1) % 7 === 0) {
+                    calendarHtml += '</tr><tr>';
+                }
+            }
+
+            calendarHtml += '</tr>';
+            calendarTable.innerHTML = calendarHtml;
+            currentMonthYear.textContent = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(date);
+
+            // Остальной код вашего календаря остается без изменений
+
+            // Очищает текущее выделение даты
+            function resetSelection() {
+                startDate = null;
+                endDate = null;
+                for (const cell of cells) {
+                    cell.classList.remove('selected-start', 'selected-end', 'selected');
+                }
+            }
+
+            // Обработчик кликов по ячейкам
+            function handleCellClick(event) {
+                const clickedCell = event.target;
+                if (!startDate) {
+                    startDate = parseInt(clickedCell.textContent);
+                    clickedCell.classList.add('selected-start');
+                } else if (!endDate && startDate !== parseInt(clickedCell.textContent)) {
+                    endDate = parseInt(clickedCell.textContent);
+                    clickedCell.classList.add('selected-end');
+
+                    // Если выбрали обратный промежуток, меняем местами значения
+                    if (startDate > endDate) {
+                        [startDate, endDate] = [endDate, startDate];
+                    }
+
+                    for (const cell of cells) {
+                        if (cell !== clickedCell) {
+                            const day = parseInt(cell.textContent);
+                            if (day > startDate && day < endDate) {
+                                cell.classList.add('selected');
+                            }
+                        }
+                    }
+                } else {
+                    resetSelection();
+                }
+            }
+
+            // Получаем все ячейки календаря и добавляем им обработчик кликов
+            const cells = calendarTable.getElementsByTagName('td');
+            let startDate = null;
+            let endDate = null;
+            for (const cell of cells) {
+                cell.addEventListener('click', handleCellClick);
+            }
+
+            // Обработчики для кнопок "Предыдущий месяц" и "Следующий месяц"
+            prevBtn.addEventListener('click', () => {
+                date.setMonth(date.getMonth() - 1);
+                generateCalendar(date.getFullYear(), date.getMonth() + 1, inactiveDates);
+                resetSelection();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                date.setMonth(date.getMonth() + 1);
+                generateCalendar(date.getFullYear(), date.getMonth() + 1, inactiveDates);
+                resetSelection();
+            });
+        }
+
+        // Получаем текущую дату
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; // Месяцы в JavaScript начинаются с 0
+
+        // Пример JSON с датами, все даты из date_range будут серыми и некликабельными
+        const jsonWithDates = [
+            {
+                "id": 2,
+                "user": 2,
+                "status": "В ожидании",
+                "price": null,
+                "arrival_date": "2023-08-24",
+                "date_departure": "2023-08-26",
+                "booking_user_name": "asdf",
+                "kspi_phone": "asdf",
+                "usadba": 1,
+                "date_range": [
+                    "2023-08-24",
+                    "2023-08-25",
+                    "2023-08-26"
+                ]
+            },
+            {
+                "id": 3,
+                "user": 2,
+                "status": "В ожидании",
+                "price": null,
+                "arrival_date": "2023-08-24",
+                "date_departure": "2023-08-24",
+                "booking_user_name": "asdf",
+                "kspi_phone": "asdf",
+                "usadba": 1,
+                "date_range": [
+                    "2023-08-24"
+                ]
+            },
+            {
+                "id": 4,
+                "user": 1,
+                "status": "В ожидании",
+                "price": null,
+                "arrival_date": "2023-08-24",
+                "date_departure": "2023-08-27",
+                "booking_user_name": "asdf",
+                "kspi_phone": "asdf",
+                "usadba": 2,
+                "date_range": [
+                    "2023-08-24",
+                    "2023-08-25",
+                    "2023-08-26",
+                    "2023-08-27"
+                ]
+            },
+            {
+                "id": 5,
+                "user": 1,
+                "status": "В ожидании",
+                "price": null,
+                "arrival_date": "2023-08-25",
+                "date_departure": "2023-08-25",
+                "booking_user_name": "asdf",
+                "kspi_phone": "asdf",
+                "usadba": 6,
+                "date_range": [
+                    "2023-08-25"
+                ]
+            }
+        ];
+
+        // Соберите все даты из JSON в один массив
+        const inactiveDates = jsonWithDates.reduce((dates, item) => {
+            return dates.concat(item.date_range);
+        }, []);
+
+        generateCalendar(currentYear, currentMonth, inactiveDates);
+    </script>
+</body>
+</html>

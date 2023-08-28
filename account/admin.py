@@ -1,12 +1,16 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 from django.urls import reverse
 
 from account.models import User, Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
-    University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter
+    University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
+    AnswerTestTask, TestTask
+from root import settings
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -50,11 +54,70 @@ class StudentPortfolioInline(admin.TabularInline):
     extra = 1  # Number of empty forms to display for adding new entries
 
 
+from django import forms
+
+
+class MailingSelectionForm(forms.Form):
+    mailing = forms.ModelChoiceField(
+        queryset=Mailing.objects.all(),
+        empty_label=None,  # Чтобы не было пустой опции
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'university', 'course', 'hours_per_week')
     list_filter = ('university', 'before_university', 'course',)
     search_fields = ('full_name', 'email', 'tg_nickname')
+    actions = ['send_custom_email']
     inlines = [StudentCVInline, StudentPortfolioInline]
+
+    def send_custom_email(self, request, queryset):
+        # Создайте форму выбора рассылки
+        form = MailingSelectionForm(request.POST)
+
+        if form.is_valid():
+            mailing = form.cleaned_data['mailing']
+
+            selected_students = queryset.values_list('id', 'email', 'tg_nickname')
+            for student_id, email, tg_nickname in selected_students:
+                subject = mailing.title
+                message = mailing.message
+                from_email = settings.DEFAULT_FROM_EMAIL
+                recipient_list = [email]
+
+                # Отправка почтового сообщения
+                send_mail(subject, message, from_email, recipient_list)
+
+                # Отправка сообщения в Телеграм (здесь предполагается, что у вас есть интеграция с API Telegram)
+                # send_telegram_message(tg_nickname, message)
+
+                # Создание записи о рассылке в модели Mailing и установка этой рассылки как последней для студента
+                mailing_instance = Mailing.objects.create(title=mailing.title, message=mailing.message,
+                                                          student_id=student_id)
+                student = Student.objects.get(pk=student_id)
+                student.last_mailing = mailing_instance
+                student.save()
+
+            # Отправьте сообщение об успешной рассылке
+            self.message_user(request, f'Рассылка успешно отправлена для {queryset.count()} студентов.')
+
+            # Перенаправьте администратора на страницу списка студентов
+            return HttpResponseRedirect(reverse('admin:account_student_changelist'))
+
+        else:
+            # Если форма не допустима, отобразите сообщение об ошибке
+            self.message_user(request, 'Выберите рассылку для отправки.', level=messages.ERROR)
+
+    send_custom_email.short_description = "Отправить рассылку выбранным студентам"
+
+    def get_actions(self, request):
+        # Добавьте действие только, если есть хотя бы одна рассылка
+        actions = super().get_actions(request)
+        if Mailing.objects.exists():
+            actions['send_custom_email'] = (
+                self.send_custom_email, 'send_custom_email', "Отправить рассылку выбранным студентам")
+        return actions
 
 
 admin.site.register(Student, StudentAdmin)
@@ -125,28 +188,52 @@ admin.site.register(Project, ProjectAdmin)
 class TaskStatusStudentInline(admin.TabularInline):
     model = TaskStatusStudent
     extra = 1
-    readonly_fields = ('date_create',)
+
+
+class AnswersStudentInline(admin.TabularInline):
+    model = AnswersStudent
+    extra = 1
 
 
 class TaskStudentAdmin(admin.ModelAdmin):
     # ... other configurations ...
 
     # Add the TaskStatusStudentInline to the inlines list
-    inlines = [TaskStatusStudentInline]
+    inlines = [TaskStatusStudentInline, AnswersStudentInline]
 
 
 class TaskGroupStudentInline(admin.TabularInline):
     model = TaskStatusGroup
     extra = 1
-    readonly_fields = ('date_create',)
+
+
+class AnswerGroupInline(admin.TabularInline):
+    model = AnswerGroup
+    extra = 1
 
 
 class TaskGroupAdmin(admin.ModelAdmin):
     # ... other configurations ...
 
     # Add the TaskStatusStudentInline to the inlines list
-    inlines = [TaskGroupStudentInline]
+    inlines = [TaskGroupStudentInline, AnswerGroupInline]
 
 
 admin.site.register(TaskGroup, TaskGroupAdmin)
 admin.site.register(TaskStudent, TaskStudentAdmin)
+admin.site.register(Mailing)
+
+
+class AnswerAnswerGroupInline(admin.TabularInline):
+    model = AnswerTestTask
+    extra = 1
+
+
+class TestTaskAdmin(admin.ModelAdmin):
+    # ... other configurations ...
+
+    # Add the TaskStatusStudentInline to the inlines list
+    inlines = [AnswerAnswerGroupInline]
+
+
+admin.site.register(TestTask, TestTaskAdmin)
