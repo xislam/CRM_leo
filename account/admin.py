@@ -9,7 +9,7 @@ from django.urls import reverse
 from account.models import User, Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
     University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
-    AnswerTestTask, TestTask
+    AnswerTestTask, TestTask, DataKnowledgeFree, UnderSectionFree, ChapterFree
 from root import settings
 
 
@@ -72,53 +72,6 @@ class StudentAdmin(admin.ModelAdmin):
     actions = ['send_custom_email']
     inlines = [StudentCVInline, StudentPortfolioInline]
 
-    def send_custom_email(self, request, queryset):
-        # Создайте форму выбора рассылки
-        form = MailingSelectionForm(request.POST)
-
-        if form.is_valid():
-            mailing = form.cleaned_data['mailing']
-
-            selected_students = queryset.values_list('id', 'email', 'tg_nickname')
-            for student_id, email, tg_nickname in selected_students:
-                subject = mailing.title
-                message = mailing.message
-                from_email = settings.DEFAULT_FROM_EMAIL
-                recipient_list = [email]
-
-                # Отправка почтового сообщения
-                send_mail(subject, message, from_email, recipient_list)
-
-                # Отправка сообщения в Телеграм (здесь предполагается, что у вас есть интеграция с API Telegram)
-                # send_telegram_message(tg_nickname, message)
-
-                # Создание записи о рассылке в модели Mailing и установка этой рассылки как последней для студента
-                mailing_instance = Mailing.objects.create(title=mailing.title, message=mailing.message,
-                                                          student_id=student_id)
-                student = Student.objects.get(pk=student_id)
-                student.last_mailing = mailing_instance
-                student.save()
-
-            # Отправьте сообщение об успешной рассылке
-            self.message_user(request, f'Рассылка успешно отправлена для {queryset.count()} студентов.')
-
-            # Перенаправьте администратора на страницу списка студентов
-            return HttpResponseRedirect(reverse('admin:account_student_changelist'))
-
-        else:
-            # Если форма не допустима, отобразите сообщение об ошибке
-            self.message_user(request, 'Выберите рассылку для отправки.', level=messages.ERROR)
-
-    send_custom_email.short_description = "Отправить рассылку выбранным студентам"
-
-    def get_actions(self, request):
-        # Добавьте действие только, если есть хотя бы одна рассылка
-        actions = super().get_actions(request)
-        if Mailing.objects.exists():
-            actions['send_custom_email'] = (
-                self.send_custom_email, 'send_custom_email', "Отправить рассылку выбранным студентам")
-        return actions
-
 
 admin.site.register(Student, StudentAdmin)
 admin.site.register(StudentCV)
@@ -135,6 +88,11 @@ admin.site.register(Course)
 admin.site.register(Chapter)
 admin.site.register(UnderSection)
 admin.site.register(DataKnowledge)
+
+admin.site.register(ChapterFree)
+admin.site.register(UnderSectionFree)
+admin.site.register(DataKnowledgeFree)
+
 
 
 class ProjectInline(admin.TabularInline):
