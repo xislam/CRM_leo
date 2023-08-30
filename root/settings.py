@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'dj_rest_auth',
     'rest_framework_simplejwt',
+    'modeltranslation',
     'drf_yasg',
     'account',
 
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'root.urls'
@@ -121,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -325,3 +327,20 @@ JAZZMIN_SETTINGS = {
         "page_header_color": "white",
     },
 }
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('es', 'Español'),
+    ('ru', 'Русский'),
+]
+
+# Активируем временную метку для языковых каталогов
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'  # Язык по умолчанию
+
+MODELTRANSLATION_LANGUAGES = ('en', 'es', 'ru')  # Список языков
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = {'default': ('en',)}

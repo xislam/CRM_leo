@@ -12,6 +12,7 @@ urlpatterns = [
     path('user_interests_second/', views.UserInterestsSecondList.as_view(), name='user_interests_second-list'),
     path('user_interests_third/', views.UserInterestsThirdFirstList.as_view(), name='user_interests_third-list'),
     path('user_before_university/', views.BeforeUniversityFirstList.as_view(), name='user_interests_university-list'),
+    path('user_university/', views.UniversityListView.as_view(), name='user_interests_university-list'),
     path('student_cv/<str:tg_nickname>/', views.StudentCVDetailView.as_view(), name='studentcv-detail'),
     path('groups/', views.GroupStudentListView.as_view(), name='groupstudent-list'),
     path('groups/<int:pk>/', views.GroupStudentDetailView.as_view(), name='groupstudent-detail'),

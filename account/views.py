@@ -26,7 +26,7 @@ from .serializers import StudentSerializer, \
     AnswerGroupSerializer, TaskStatusGroupSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
-    DataKnowledgeSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    DataKnowledgeSerializer, UniversitySerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -240,3 +240,8 @@ class DataKnowledgeFreeListView(generics.ListAPIView):
 class DataKnowledgeListView(generics.ListAPIView):
     queryset = DataKnowledge.objects.all()
     serializer_class = DataKnowledgeSerializer
+
+
+class UniversityListView(generics.ListAPIView):
+    queryset = DataKnowledge.objects.all()
+    serializer_class = UniversitySerializer
