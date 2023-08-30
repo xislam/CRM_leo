@@ -201,7 +201,7 @@ class StudentPortfolio(models.Model):
 
 class GroupStudent(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название группы')
-    captain = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, related_name='captain_group_students')
+    captain = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, related_name='captain_group_students')
     students = models.ManyToManyField(Student, related_name='group_students')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
