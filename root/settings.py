@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'dj_rest_auth',
     'rest_framework_simplejwt',
-    'modeltranslation',
+
     'drf_yasg',
     'account',
 
