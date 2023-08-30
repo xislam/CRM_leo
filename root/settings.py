@@ -344,3 +344,8 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'  # Язык по умолчанию
 MODELTRANSLATION_LANGUAGES = ('en', 'es', 'ru')  # Список языков
 
 MODELTRANSLATION_FALLBACK_LANGUAGES = {'default': ('en',)}
+
+TRANSLATABLE_MODEL_MODULES = [
+    'account.models',  # Замените 'myapp' на имя вашего приложения
+    # Другие модули, если есть
+]
