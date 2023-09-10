@@ -1,60 +1,32 @@
 from django.contrib import admin, messages
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserCreationForm
-from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
+from django.contrib.admin import TabularInline
+from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 from django.urls import reverse
-
-from account.models import User, Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
+from django import forms
+from account.forms import UserInterestsFirstForm, StudentForm, UserInterestsSecondForm, UserInterestsThirdForm, \
+    GroupStudentForm, CourseForm, StudentCVForm, UniversityForm, BeforeUniversityForm, StudentPortfolioForm, \
+    ChapterForm, UnderSectionForm, DataKnowledgeForm, DataKnowledgeFreeForm, TaskGroupForm, TaskStudentForm, \
+    TestTaskForm, AnswersStudentForm, TaskStatusStudentForm, CommentForm, TaskStatusGroupForm, AnswerGroupForm, \
+    MailingTranslationForm, ProjectForm, AnswerTestTaskForm
+from account.models import Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
     University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
     AnswerTestTask, TestTask, DataKnowledgeFree
-from root import settings
 
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = (
-            'username', 'tg_nickname', 'full_name', 'mobile_phone', 'email', 'age', 'gender', 'university', 'course',
-            'faculty')
-
-
-class CustomUserAdmin(UserAdmin):
-    fieldsets = (
-        ('General', {
-            'fields': ('username', 'password')
-        }),
-        ('Personal info', {
-            'fields': (
-                'full_name', 'email', 'mobile_phone', 'tg_nickname', 'age', 'gender', 'university', 'course', 'faculty')
-        }),
-        ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')
-        }),
-        ('Important dates', {
-            'fields': ('last_login', 'date_joined')
-        }),
-    )
-
-    add_form = CustomUserCreationForm
-
-
-admin.site.register(User, CustomUserAdmin)
-
-
-class StudentCVInline(admin.TabularInline):
+class StudentCVInline(TabularInline):
     model = StudentCV
     extra = 1  # Number of empty forms to display for adding new entries
+    fk_name = 'student'
+    form = StudentCVForm
 
 
-class StudentPortfolioInline(admin.TabularInline):
+class StudentPortfolioInline(TabularInline):
     model = StudentPortfolio
     extra = 1  # Number of empty forms to display for adding new entries
-
-
-from django import forms
+    form = StudentPortfolioForm
+    fk_name = 'student'
 
 
 class MailingSelectionForm(forms.Form):
@@ -65,7 +37,9 @@ class MailingSelectionForm(forms.Form):
     )
 
 
+@admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
+    form = StudentForm
     list_display = ('full_name', 'university', 'course', 'hours_per_week')
     list_filter = ('university', 'before_university', 'course',)
     search_fields = ('full_name', 'email', 'tg_nickname')
@@ -73,33 +47,77 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [StudentCVInline, StudentPortfolioInline]
 
 
-admin.site.register(Student, StudentAdmin)
-admin.site.register(StudentCV)
-admin.site.register(University)
-admin.site.register(BeforeUniversity)
-
-admin.site.register(StudentPortfolio)
-
-admin.site.register(UserInterestsFirst)
-admin.site.register(UserInterestsSecond)
-admin.site.register(UserInterestsThird)
-admin.site.register(Course)
-
-admin.site.register(Chapter)
-admin.site.register(UnderSection)
-admin.site.register(DataKnowledge)
+@admin.register(StudentCV)
+class StudentCVAdmin(admin.ModelAdmin):
+    form = StudentCVForm
 
 
-admin.site.register(DataKnowledgeFree)
+@admin.register(University)
+class UniversityAdmin(admin.ModelAdmin):
+    form = UniversityForm
 
 
 
-class ProjectInline(admin.TabularInline):
+@admin.register(BeforeUniversity)
+class BeforeUniversityAdmin(admin.ModelAdmin):
+    form = BeforeUniversityForm
+
+
+@admin.register(StudentPortfolio)
+class StudentPortfolioAdmin(admin.ModelAdmin):
+    form = StudentPortfolioForm
+
+
+@admin.register(UserInterestsFirst)
+class UserInterestsFirstAdmin(admin.ModelAdmin):
+    form = UserInterestsFirstForm
+
+
+@admin.register(UserInterestsSecond)
+class UserInterestsSecondAdmin(admin.ModelAdmin):
+    form = UserInterestsSecondForm
+
+
+@admin.register(UserInterestsThird)
+class UserInterestsThirdAdmin(admin.ModelAdmin):
+    form = UserInterestsThirdForm
+
+
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    form = CourseForm
+
+
+@admin.register(Chapter)
+class ChapterAdmin(admin.ModelAdmin):
+    form = ChapterForm
+
+
+@admin.register(UnderSection)
+class UnderSectionAdmin(admin.ModelAdmin):
+    form = UnderSectionForm
+
+
+@admin.register(DataKnowledge)
+class DataKnowledgeAdmin(admin.ModelAdmin):
+    form = DataKnowledgeForm
+
+
+@admin.register(DataKnowledgeFree)
+class DataKnowledgeFreeAdmin(admin.ModelAdmin):
+    form = DataKnowledgeFreeForm
+
+
+class ProjectInline(TabularInline):
     model = Project.group.through
     extra = 1
+    verbose_name = _('Проект')
+    verbose_name_plural = _('Проект')
 
 
+@admin.register(GroupStudent)
 class GroupAdmin(admin.ModelAdmin):
+    form = GroupStudentForm
     list_display = ('name', 'get_students_table')
     list_filter = (
         'students__university', 'students__course')  # Используем связанные поля из модели Student
@@ -119,78 +137,89 @@ class GroupAdmin(admin.ModelAdmin):
     inlines = [ProjectInline]
 
 
-admin.site.register(GroupStudent, GroupAdmin)
-
-
-class CommentInline(admin.TabularInline):
+class CommentInline(TabularInline):
     model = Comment
     extra = 1
+    form = CommentForm
+    fk_name = 'project'
 
 
-class TaskGroupInline(admin.TabularInline):
+class TaskGroupInline(TabularInline):
     model = TaskGroup
+    form = TaskGroupForm
+    fk_name = 'project'
 
 
-class TaskStudentInline(admin.TabularInline):
+class TaskStudentInline(TabularInline):
     model = TaskStudent
+    form = TaskStudentForm
+    fk_name = 'project'
 
 
+@admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
+    form = ProjectForm
     inlines = [CommentInline, TaskStudentInline, TaskGroupInline]
 
 
-admin.site.register(Project, ProjectAdmin)
-
-
-class TaskStatusStudentInline(admin.TabularInline):
+class TaskStatusStudentInline(TabularInline):
     model = TaskStatusStudent
+    form = TaskStatusStudentForm
     extra = 1
+    fk_name = 'task_student'
 
 
-class AnswersStudentInline(admin.TabularInline):
+class AnswersStudentInline(TabularInline):
     model = AnswersStudent
+    form = AnswersStudentForm
     extra = 1
 
 
+@admin.register(TaskStudent)
 class TaskStudentAdmin(admin.ModelAdmin):
-    # ... other configurations ...
-
+    # ... other configurations ..
+    form = TaskStudentForm
     # Add the TaskStatusStudentInline to the inlines list
     inlines = [TaskStatusStudentInline, AnswersStudentInline]
 
 
-class TaskGroupStudentInline(admin.TabularInline):
+class TaskGroupStudentInline(TabularInline):
     model = TaskStatusGroup
     extra = 1
+    form = TaskStatusGroupForm
+    fk_name = 'task_group'
 
 
-class AnswerGroupInline(admin.TabularInline):
+class AnswerGroupInline(TabularInline):
     model = AnswerGroup
     extra = 1
+    form = AnswerGroupForm
+    fk_name = 'answer'
 
 
+@admin.register(TaskGroup)
 class TaskGroupAdmin(admin.ModelAdmin):
     # ... other configurations ...
-
+    form = TaskGroupForm
     # Add the TaskStatusStudentInline to the inlines list
     inlines = [TaskGroupStudentInline, AnswerGroupInline]
 
 
-admin.site.register(TaskGroup, TaskGroupAdmin)
-admin.site.register(TaskStudent, TaskStudentAdmin)
-admin.site.register(Mailing)
+@admin.register(Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    form = MailingTranslationForm
 
 
-class AnswerAnswerGroupInline(admin.TabularInline):
+class AnswerAnswerGroupInline(TabularInline):
     model = AnswerTestTask
     extra = 1
+    form = AnswerTestTaskForm
+    fk_name = 'answer'
 
 
+@admin.register(TestTask)
 class TestTaskAdmin(admin.ModelAdmin):
     # ... other configurations ...
-
+    form = TestTaskForm
     # Add the TaskStatusStudentInline to the inlines list
     inlines = [AnswerAnswerGroupInline]
-
-
-admin.site.register(TestTask, TestTaskAdmin)

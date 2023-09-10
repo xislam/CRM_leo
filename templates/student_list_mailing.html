@@ -1,4 +1,4 @@
-<!-- student_list.html -->
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,55 +9,56 @@
 </head>
 <body>
 <div class="container">
-    <h1>Список студентов</h1>
+    <h1>{% trans "Список студентов" %}</h1>
 
     <!-- Форма для фильтрации студентов -->
     <form method="get" class="form-inline" style="padding-bottom: 40px">
         <div class="form-row">
             <div class="form-group " style="margin-right: 25px">
                 <label for="{{ filter_form.before_university.id_for_label }}"
-                       style="margin-right: 10px">Образование</label>
+                       style="margin-right: 10px">{% trans "Образование" %}</label>
                 {{ filter_form.before_university }}
             </div>
 
             <div class="form-group " style="margin-right: 25px">
-                <label for="{{ filter_form.university.id_for_label }}" style="margin-right: 10px">ВУЗ</label>
+                <label for="{{ filter_form.university.id_for_label }}"
+                       style="margin-right: 10px">{% trans "ВУЗ" %}</label>
                 {{ filter_form.university }}
             </div>
 
             <div class="form-group" style="margin-left: 25px;">
-                <label for="{{ filter_form.course.id_for_label }}" style="margin-right: 10px">Курс</label>
+                <label for="{{ filter_form.course.id_for_label }}" style="margin-right: 10px">{% trans "Курс" %}</label>
                 {{ filter_form.course }}
             </div>
 
             <div class="form-group" style="margin-left: 25px; padding-top: 25px">
-                <label for="{{ filter_form.manager_status.id_for_label }}" style="margin-right: 10px">Статус
-                    менеджера</label>
+                <label for="{{ filter_form.manager_status.id_for_label }}"
+                       style="margin-right: 10px">{% trans "Статус менеджера" %}</label>
                 {{ filter_form.manager_status }}
             </div>
 
             <div class="form-group" style="margin-left: 25px; padding-top: 25px">
-                <label for="{{ filter_form.education_status.id_for_label }}" style="margin-right: 10px">Статус
-                    обучение</label>
+                <label for="{{ filter_form.education_status.id_for_label }}"
+                       style="margin-right: 10px">{% trans "Статус обучение" %}</label>
                 {{ filter_form.education_status }}
             </div>
 
             <!-- Добавьте другие поля фильтрации здесь, если необходимо -->
 
             <div class="form-group " style="margin-left: 25px; padding-top: 25px">
-                <button type="submit" class="btn btn-primary btn-block">Применить фильтры</button>
+                <button type="submit" class="btn btn-primary btn-block">{% trans "Применить фильтры" %}</button>
             </div>
         </div>
     </form>
     <!-- Таблица со списком студентов -->
-{% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-    <form method="post"  enctype="multipart/form-data">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <table class="table table-striped">
             <thead>
@@ -66,15 +67,15 @@
                     <input type="checkbox" id="select-all">
                 </th>
 
-                <th>ФИО</th>
-                <th>Образование</th>
-                <th>ВУЗ</th>
-                <th>Курс</th>
-                <th>Статус менеджера</th>
-                <th>Статус обучение</th>
-                <th>Дата последней рассылки</th>
-                <th>Заголовок последней рассылки</th>
-                <th>Сообщение последней рассылки</th>
+                <th>{% trans "ФИО" %}</th>
+                <th>{% trans "Образование" %}</th>
+                <th>{% trans "ВУЗ" %}</th>
+                <th>{% trans "Курс" %}</th>
+                <th>{% trans "Статус менеджера" %}</th>
+                <th>{% trans "Статус обучение" %}</th>
+                <th>{% trans "Дата последней рассылки" %}</th>
+                <th>{% trans "Заголовок последней рассылки" %}</th>
+                <th>{% trans "Сообщение последней рассылки" %}</th>
                 <!-- Добавьте другие поля студента, которые вам нужны -->
             </tr>
             </thead>
@@ -99,17 +100,17 @@
             {% endfor %}
             </tbody>
         </table>
-    {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{% trans message %}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         {{ mailing_form.as_p }}
 
-        <button type="submit" class="btn btn-success">Отправить студентам</button>
+        <button type="submit" class="btn btn-success">{% trans "Отправить студентам" %}</button>
     </form>
 </div>
 

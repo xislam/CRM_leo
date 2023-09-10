@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-28 15:24+0000\n"
+"POT-Creation-Date: 2023-09-10 10:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,13 +20,500 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
+#: account/admin.py:113 account/admin.py:114 account/models.py:208
+#: account/models.py:209 account/models.py:213 account/models.py:265
+#: account/models.py:326
+msgid "Проект"
+msgstr "Проект"
+
+#: account/forms.py:12 account/forms.py:22
+msgid "Все"
+msgstr "Все"
+
+#: account/forms.py:13
+msgid "Лид"
+msgstr "Лид"
+
+#: account/forms.py:14 account/models.py:91
+msgid "В работе у менеджера"
+msgstr "В работе у менеджера"
+
+#: account/forms.py:15 account/models.py:92
+msgid "Отказ"
+msgstr "Отказ"
+
+#: account/forms.py:16 account/models.py:93
+msgid "Ожидает оплаты"
+msgstr "Ожидает оплаты"
+
+#: account/forms.py:17 account/models.py:94
+msgid "Частично оплачен"
+msgstr "Частично оплачен"
+
+#: account/forms.py:18 account/models.py:95
+msgid "Оплачен"
+msgstr "Оплачен"
+
+#: account/forms.py:23 account/models.py:99
+msgid "Регистрация на бесплатную подписку"
+msgstr "Регистрация на бесплатную подписку"
+
+#: account/forms.py:24 account/models.py:100
+msgid "Завершена бесплатная подписка"
+msgstr "Завершена бесплатная подписка"
+
+#: account/forms.py:25 account/models.py:101
+msgid "Участник платной подписки"
+msgstr "Участник платной подписки"
+
+#: account/forms.py:26 account/models.py:102
+msgid "Участник курса"
+msgstr "Участник курса"
+
+#: account/forms.py:27 account/models.py:103
+msgid "Выбыл"
+msgstr "Выбыл"
+
+#: account/forms.py:28 account/models.py:104
+msgid "Завершил обучение"
+msgstr "Завершил обучение"
+
+#: account/forms.py:31 account/models.py:63 account/models.py:64
+#: account/models.py:116 templates/student_list_mailing.html:19
+#: templates/student_list_mailing.html:71
+msgid "Образование"
+msgstr "Образование"
+
+#: account/forms.py:34
+msgid "Все университеты"
+msgstr "Все университеты"
+
+#: account/forms.py:37
+msgid "Все курсы"
+msgstr "Все курсы"
+
+#: account/forms.py:49 account/models.py:379 account/models.py:415
+#: account/models.py:427
+msgid "Тема"
+msgstr "Тема"
+
+#: account/forms.py:51 account/models.py:428
+msgid "Заголовок"
+msgstr "Заголовок"
+
+#: account/forms.py:53 account/models.py:429
+msgid "Сообщение"
+msgstr "Сообщение"
+
+#: account/models.py:24 account/models.py:35 account/models.py:46
+msgid "Интерес"
+msgstr "Интерес"
+
+#: account/models.py:30 account/models.py:31 account/models.py:120
+msgid "Профессиональная сфера интересов"
+msgstr "Профессиональная сфера интересов"
+
+#: account/models.py:41 account/models.py:42 account/models.py:124
+msgid "Интересующие Вас ниши"
+msgstr "Интересующие Вас ниши"
+
+#: account/models.py:52 account/models.py:53 account/models.py:128
+msgid "Цели"
+msgstr "Цели"
+
+#: account/models.py:57 account/models.py:68 account/models.py:79
+msgid "Наименования"
+msgstr "Наименования"
+
+#: account/models.py:74 account/models.py:75 account/models.py:117
+#: templates/student_list_mailing.html:25
+#: templates/student_list_mailing.html:72
+msgid "ВУЗ"
+msgstr "ВУЗ"
+
+#: account/models.py:85 account/models.py:86 account/models.py:119
+#: templates/student_list_mailing.html:30
+#: templates/student_list_mailing.html:73
+msgid "Курс"
+msgstr "Курс"
+
+#: account/models.py:90
+msgid "Manager Lead"
+msgstr "Ведущий менеджер"
+
+#: account/models.py:90
+msgid "Лид менеджера"
+msgstr "Лид менеджера"
+
+#: account/models.py:91
+msgid "In Progress with Manager"
+msgstr "В разработке у менеджера"
+
+#: account/models.py:92
+msgid "Rejected"
+msgstr "Отклоненный"
+
+#: account/models.py:93
+msgid "Awaiting Payment"
+msgstr "Ожидание оплаты"
+
+#: account/models.py:94
+msgid "Partially Paid"
+msgstr "Частично оплачено"
+
+#: account/models.py:95
+msgid "Paid"
+msgstr "Оплаченный"
+
+#: account/models.py:99
+msgid "Registration for Free Subscription"
+msgstr "Регистрация для бесплатной подписки"
+
+#: account/models.py:100
+msgid "Completed Free Subscription"
+msgstr "Завершена бесплатная подписка"
+
+#: account/models.py:101
+msgid "Paid Subscription Participant"
+msgstr "Участник платной подписки"
+
+#: account/models.py:102
+msgid "Course Participant"
+msgstr "Участник курса"
+
+#: account/models.py:103
+msgid "Dropout"
+msgstr "Выбывать"
+
+#: account/models.py:104
+msgid "Completed Education"
+msgstr "Законченное образование"
+
+#: account/models.py:110 templates/student_list_mailing.html:70
+msgid "ФИО"
+msgstr "ФИО"
+
+#: account/models.py:111
+msgid "Мобильный телефон"
+msgstr "Мобильный телефон"
+
+#: account/models.py:112
+msgid "Электронная почта"
+msgstr "Электронная почта"
+
+#: account/models.py:113
+msgid "Ник в Телеграм"
+msgstr "Ник в Телеграм"
+
+#: account/models.py:114
+msgid "Возраст"
+msgstr "Возраст"
+
+#: account/models.py:115
+msgid "Пол"
+msgstr "Пол"
+
+#: account/models.py:118
+msgid "Факультет"
+msgstr "Факультет"
+
+#: account/models.py:122
+msgid "Профессиональная сфера интересов другое"
+msgstr "Профессиональная сфера интересов другое"
+
+#: account/models.py:126
+msgid "Интересующие Вас ниши другое"
+msgstr "Интересующие Вас ниши другое"
+
+#: account/models.py:129
+msgid "цели другие"
+msgstr "цели другие"
+
+#: account/models.py:130 templates/student_list_mailing.html:36
+#: templates/student_list_mailing.html:74
+msgid "Статус менеджера"
+msgstr "Статус менеджера"
+
+#: account/models.py:131
+msgid "Статус обучения"
+msgstr "Статус обучения"
+
+#: account/models.py:134
+msgid "Сколько часов готовы уделять в неделю"
+msgstr "Сколько часов готовы уделять в неделю"
+
+#: account/models.py:146 account/models.py:151 account/models.py:164
+#: account/models.py:327 account/models.py:432
+msgid "Студент"
+msgstr "Студент"
+
+#: account/models.py:147
+msgid "Студенты"
+msgstr "Студенты"
+
+#: account/models.py:152 account/models.py:159 account/models.py:160
+msgid "Резюме студента"
+msgstr "Резюме студента"
+
+#: account/models.py:153 account/models.py:166 account/models.py:180
+#: account/models.py:218 account/models.py:314 account/models.py:365
+msgid "Дата создания"
+msgstr "Дата создания"
+
+#: account/models.py:165 account/models.py:172 account/models.py:173
+msgid "Портфолио студента"
+msgstr "Портфолио студента"
+
+#: account/models.py:177
+msgid "Название группы"
+msgstr "Название группы"
+
+#: account/models.py:186 account/models.py:191
+msgid "Группа"
+msgstr "Группа"
+
+#: account/models.py:187
+msgid "Группы"
+msgstr "Группы"
+
+#: account/models.py:192
+msgid "Наименование"
+msgstr "Наименование"
+
+#: account/models.py:193
+msgid "Сложность"
+msgstr "Сложность"
+
+#: account/models.py:194 account/models.py:231 account/models.py:268
+#: account/models.py:330
+msgid "Дата начала"
+msgstr "Дата начала"
+
+#: account/models.py:195 account/models.py:232 account/models.py:269
+#: account/models.py:331
+msgid "Дата окончания"
+msgstr "Дата окончания"
+
+#: account/models.py:196
+msgid "Оценка"
+msgstr "Оценка"
+
+#: account/models.py:214
+msgid "админ"
+msgstr "админ"
+
+#: account/models.py:215
+msgid "Капитан группы"
+msgstr "Капитан группы"
+
+#: account/models.py:217
+msgid "Текст комментария"
+msgstr "Текст комментария"
+
+#: account/models.py:224
+msgid "Комментарий"
+msgstr "Комментарий"
+
+#: account/models.py:225
+msgid "Комментарии"
+msgstr "Комментарии"
+
+#: account/models.py:229 account/models.py:266 account/models.py:328
+msgid "Описание"
+msgstr "Описание"
+
+#: account/models.py:230 account/models.py:267 account/models.py:329
+msgid "Стоимость"
+msgstr "Стоимость"
+
+#: account/models.py:233 account/models.py:270 account/models.py:332
+msgid "оценка"
+msgstr "оценка"
+
+#: account/models.py:245
+msgid "Задача тесовое"
+msgstr "Задача тесовое"
+
+#: account/models.py:246
+msgid "Задача тестовое"
+msgstr "Задача тестовое"
+
+#: account/models.py:250 account/models.py:298
+msgid "Ответ файлом"
+msgstr "Ответ файлом"
+
+#: account/models.py:251 account/models.py:299
+msgid "Ответ ссылкой"
+msgstr "Ответ ссылкой"
+
+#: account/models.py:252
+msgid "Ответ по задаче"
+msgstr "Ответ по задаче"
+
+#: account/models.py:254 account/models.py:302
+msgid "Пользователь"
+msgstr "Пользователь"
+
+#: account/models.py:260 account/models.py:261
+msgid "Ответы"
+msgstr "Ответы"
+
+#: account/models.py:282 account/models.py:283
+msgid "Задача группы по проекту"
+msgstr "Задача группы по проекту"
+
+#: account/models.py:287
+msgid "В работу"
+msgstr "В работу"
+
+#: account/models.py:288
+msgid "Выполняется"
+msgstr "Выполняется"
+
+#: account/models.py:289
+msgid "Выполнена"
+msgstr "Выполнена"
+
+#: account/models.py:290
+msgid "Ожидает ОС"
+msgstr "Ожидает ОС"
+
+#: account/models.py:291
+msgid "На правках"
+msgstr "На правках"
+
+#: account/models.py:292
+msgid "Завершена"
+msgstr "Завершена"
+
+#: account/models.py:293
+msgid "На паузе"
+msgstr "На паузе"
+
+#: account/models.py:300 account/models.py:308 account/models.py:309
+msgid "Ответ группы"
+msgstr "Ответ группы"
+
+#: account/models.py:313
+msgid "Задача группы"
+msgstr "Задача группы"
+
+#: account/models.py:315 account/models.py:366
+msgid "Статус"
+msgstr "Статус"
+
+#: account/models.py:321 account/models.py:322
+msgid "Статус задачи группы"
+msgstr "Статус задачи группы"
+
+#: account/models.py:344 account/models.py:345
+msgid "Задача студента по проекту"
+msgstr "Задача студента по проекту"
+
+#: account/models.py:364
+msgid "Задача студента"
+msgstr "Задача студента"
+
+#: account/models.py:372 account/models.py:373
+msgid "Статус задачи студента"
+msgstr "Статус задачи студента"
+
+#: account/models.py:377 account/models.py:391 account/models.py:413
+msgid "Раздел"
+msgstr "Раздел"
+
+#: account/models.py:378 account/models.py:402 account/models.py:414
+msgid "Под раздел"
+msgstr "Под раздел"
+
+#: account/models.py:380 account/models.py:416
+msgid "Ссылки"
+msgstr "Ссылки"
+
+#: account/models.py:386 account/models.py:387
+msgid "База знаний бесплатно"
+msgstr "База знаний бесплатно"
+
+#: account/models.py:397 account/models.py:398
+msgid "Разделы"
+msgstr "Разделы"
+
+#: account/models.py:408 account/models.py:409
+msgid "Раздел Образование"
+msgstr "Раздел Образование"
+
+#: account/models.py:422 account/models.py:423
+msgid "База знаний платно"
+msgstr "База знаний платно"
+
+#: account/models.py:430
+msgid "Фото"
+msgstr "Фото"
+
+#: account/models.py:431
+msgid "Дата отправки"
+msgstr "Дата отправки"
+
+#: account/models.py:438
+msgid "Рассылка"
+msgstr "Рассылка"
+
+#: account/models.py:439
+msgid "Рассылки"
+msgstr "Рассылки"
+
+#: root/settings.py:333
+msgid "English"
+msgstr "English"
+
+#: root/settings.py:334
+msgid "Español"
+msgstr "Español"
+
+#: root/settings.py:335
+msgid "Русский"
+msgstr "Русский"
+
+#: templates/student_list_mailing.html:12
+#, fuzzy
+#| msgid "Резюме студента"
+msgid "Список студентов"
+msgstr "Резюме студента"
+
+#: templates/student_list_mailing.html:42
+#: templates/student_list_mailing.html:75
+msgid "Статус обучение"
+msgstr "Статус обучение"
+
+#: templates/student_list_mailing.html:49
+msgid "Применить фильтры"
+msgstr "Применить фильтры"
+
+#: templates/student_list_mailing.html:76
+msgid "Дата последней рассылки"
+msgstr "Дата последней рассылки"
+
+#: templates/student_list_mailing.html:77
+msgid "Заголовок последней рассылки"
+msgstr "Заголовок последней рассылки"
+
+#: templates/student_list_mailing.html:78
+msgid "Сообщение последней рассылки"
+msgstr "Сообщение последней рассылки"
+
+#: templates/student_list_mailing.html:113
+#, fuzzy
+#| msgid "Задача студента"
+msgid "Отправить студентам"
+msgstr "Задача студента"
+
 #: venv/lib/python3.11/site-packages/django/contrib/messages/apps.py:15
 msgid "Messages"
-msgstr ""
+msgstr "Сообщения"
 
 #: venv/lib/python3.11/site-packages/django/contrib/sitemaps/apps.py:8
 msgid "Site Maps"
-msgstr ""
+msgstr "Карты сайта"
 
 #: venv/lib/python3.11/site-packages/django/contrib/staticfiles/apps.py:9
 msgid "Static Files"
@@ -44,32 +531,32 @@ msgstr ""
 
 #: venv/lib/python3.11/site-packages/django/core/paginator.py:50
 msgid "That page number is not an integer"
-msgstr ""
+msgstr "Этот номер страницы не является целым числом"
 
 #: venv/lib/python3.11/site-packages/django/core/paginator.py:52
 msgid "That page number is less than 1"
-msgstr ""
+msgstr "Этот номер страницы меньше 1"
 
 #: venv/lib/python3.11/site-packages/django/core/paginator.py:54
 msgid "That page contains no results"
-msgstr ""
+msgstr "На этой странице нет результатов"
 
 #: venv/lib/python3.11/site-packages/django/core/validators.py:22
 msgid "Enter a valid value."
-msgstr ""
+msgstr "Введите допустимое значение."
 
 #: venv/lib/python3.11/site-packages/django/core/validators.py:104
 #: venv/lib/python3.11/site-packages/django/forms/fields.py:752
 msgid "Enter a valid URL."
-msgstr ""
+msgstr "Введите действительный URL-адрес."
 
 #: venv/lib/python3.11/site-packages/django/core/validators.py:165
 msgid "Enter a valid integer."
-msgstr ""
+msgstr "Введите допустимое целое число."
 
 #: venv/lib/python3.11/site-packages/django/core/validators.py:176
 msgid "Enter a valid email address."
-msgstr ""
+msgstr "Введите действительный адрес электронной почты."
 
 #. Translators: "letters" means latin letters: a-z and A-Z.
 #: venv/lib/python3.11/site-packages/django/core/validators.py:259
@@ -1225,4 +1712,8 @@ msgstr ""
 
 #: venv/lib/python3.11/site-packages/django/views/templates/default_urlconf.html:248
 msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: venv/lib/python3.11/site-packages/modeltranslation/widgets.py:24
+msgid "None"
 msgstr ""
