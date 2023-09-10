@@ -254,7 +254,7 @@ JAZZMIN_SETTINGS = {
     # Custom links to append to app groups, keyed on app name
     "custom_links": {
         "auth": [{
-            "name": "Отправить рассылку",
+            "name": _("Send newsletter"),
             "url": "/api/students/students/",  # Используем абсолютный URL
             "icon": "fas fa-comments",
             "permissions": ["chat.view"]
