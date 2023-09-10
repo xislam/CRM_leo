@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-10 10:16+0000\n"
+"POT-Creation-Date: 2023-09-10 11:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: account/admin.py:113 account/admin.py:114 account/models.py:208
+#: account/admin.py:114 account/admin.py:115 account/models.py:208
 #: account/models.py:209 account/models.py:213 account/models.py:265
 #: account/models.py:326
 msgid "Проект"
 msgstr "Progetto"
+
+#: account/filters.py:20
+msgid "Language"
+msgstr ""
 
 #: account/forms.py:12 account/forms.py:22
 msgid "Все"
@@ -459,6 +463,10 @@ msgstr "Mailing"
 #: account/models.py:439
 msgid "Рассылки"
 msgstr "Mailings"
+
+#: root/settings.py:257
+msgid "Send newsletter"
+msgstr "Enviar boletín"
 
 #: root/settings.py:333
 msgid "English"
@@ -1753,3 +1761,8 @@ msgstr ""
 #: venv/lib/python3.11/site-packages/modeltranslation/widgets.py:24
 msgid "None"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Отправить студентам"
+#~ msgid "Отправить рассылку"
+#~ msgstr "Invia agli studenti"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-10 10:16+0000\n"
+"POT-Creation-Date: 2023-09-10 11:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,15 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: account/admin.py:113 account/admin.py:114 account/models.py:208
+#: account/admin.py:114 account/admin.py:115 account/models.py:208
 #: account/models.py:209 account/models.py:213 account/models.py:265
 #: account/models.py:326
 msgid "Проект"
 msgstr "Проект"
+
+#: account/filters.py:20
+msgid "Language"
+msgstr ""
 
 #: account/forms.py:12 account/forms.py:22
 msgid "Все"
@@ -461,6 +465,10 @@ msgstr "Рассылка"
 #: account/models.py:439
 msgid "Рассылки"
 msgstr "Рассылки"
+
+#: root/settings.py:257
+msgid "Send newsletter"
+msgstr "Отправить рассылку"
 
 #: root/settings.py:333
 msgid "English"
@@ -1717,3 +1725,8 @@ msgstr ""
 #: venv/lib/python3.11/site-packages/modeltranslation/widgets.py:24
 msgid "None"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Задача студента"
+#~ msgid "Отправить рассылку"
+#~ msgstr "Отправить рассылку"
