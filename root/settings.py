@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import datetime
 import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+
     'rest_framework',
     'dj_rest_auth',
     'rest_framework_simplejwt',
-
+    'modeltranslation',
     'drf_yasg',
     'account',
 
@@ -101,7 +103,6 @@ DATABASES = {
 #     }
 # }
 
-AUTH_USER_MODEL = "account.User"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -123,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -329,11 +330,13 @@ JAZZMIN_SETTINGS = {
 }
 
 LANGUAGES = [
-    ('en', 'English'),
-    ('es', 'Español'),
-    ('ru', 'Русский'),
+    ('en', _('English')),
+    ('es', _('Español')),
+    ('ru', _('Русский')),
 ]
 
+ADMIN_LANGUAGE_REDIRECT_LANGUAGES = ['en', 'es', 'ru']
+ADMIN_LANGUAGE_REDIRECT_EXCLUDE_APPS = []
 # Активируем временную метку для языковых каталогов
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
