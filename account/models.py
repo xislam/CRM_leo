@@ -108,11 +108,11 @@ EDUCATION_STATUSES = [
 class Student(models.Model):
     # Обязательные поля
     full_name = models.CharField(max_length=255, verbose_name=_('ФИО'))
-    mobile_phone = models.CharField(max_length=15, verbose_name=_('Мобильный телефон'))
+    mobile_phone = models.CharField(max_length=25, verbose_name=_('Мобильный телефон'))
     email = models.EmailField(verbose_name=_('Электронная почта'))
     tg_nickname = models.CharField(max_length=50, verbose_name=_('Ник в Телеграм'), unique=True)
     age = models.PositiveIntegerField(verbose_name=_('Возраст'))
-    gender = models.CharField(max_length=10, verbose_name=_('Пол'))
+    gender = models.CharField(max_length=50, verbose_name=_('Пол'))
     before_university = models.ForeignKey(BeforeUniversity, verbose_name=_('Образование'), on_delete=models.CASCADE)
     university = models.ForeignKey(University, verbose_name=_('ВУЗ'), on_delete=models.CASCADE)
     faculty = models.CharField(max_length=255, verbose_name=_('Факультет'))
@@ -127,11 +127,12 @@ class Student(models.Model):
                                              blank=True)
     interest_third = models.ManyToManyField('UserInterestsThird', verbose_name=_('Цели'), blank=True)
     other_interest_third = models.CharField(max_length=150, verbose_name=_('цели другие'), null=True, blank=True)
-    manager_status = models.CharField(max_length=20, choices=MANAGER_STATUSES, verbose_name=_('Статус менеджера'))
-    education_status = models.CharField(max_length=40, choices=EDUCATION_STATUSES, verbose_name=_('Статус обучения'))
+    manager_status = models.CharField(max_length=50, choices=MANAGER_STATUSES, verbose_name=_('Статус менеджера'))
+    education_status = models.CharField(max_length=50, choices=EDUCATION_STATUSES, verbose_name=_('Статус обучения'))
 
     # Дополнительное поле
     hours_per_week = models.PositiveIntegerField(verbose_name=_('Сколько часов готовы уделять в неделю'))
+    telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
 
     def __str__(self):
         return self.full_name
@@ -170,6 +171,7 @@ class StudentPortfolio(models.Model):
 
     class Meta:
         verbose_name = _('Портфолио студента')
+
         verbose_name_plural = _('Портфолио студента')
 
 
