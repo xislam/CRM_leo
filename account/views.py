@@ -15,7 +15,7 @@ from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, \
-    DataKnowledge  # Предположим, у вас есть модель Student
+    DataKnowledge, University, Course  # Предположим, у вас есть модель Student
 from .serializers import StudentSerializer, \
     UserInterestsFirstSerializer, \
     UserInterestsSecondSerializer, \
@@ -26,7 +26,8 @@ from .serializers import StudentSerializer, \
     AnswerGroupSerializer, TaskStatusGroupSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
-    DataKnowledgeSerializer, UniversitySerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    DataKnowledgeSerializer, UniversitySerializer, \
+    CourseSerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -203,6 +204,7 @@ class AnswerGroupListView(generics.ListCreateAPIView):
     serializer_class = AnswerGroupSerializer
 
 
+
 class TaskStatusGroupListView(generics.ListCreateAPIView):
     queryset = TaskStatusGroup.objects.all()
     serializer_class = TaskStatusGroupSerializer
@@ -243,5 +245,10 @@ class DataKnowledgeListView(generics.ListAPIView):
 
 
 class UniversityListView(generics.ListAPIView):
-    queryset = DataKnowledge.objects.all()
+    queryset = University.objects.all()
     serializer_class = UniversitySerializer
+
+
+class CourseListView(generics.ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
