@@ -44,6 +44,8 @@ class StudentDetailUpdateView(RetrieveUpdateAPIView):
 class StudentListView(ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = StudentFilter
 
 
 class StudentListMailingView(ListView):
@@ -202,7 +204,6 @@ class TaskGroupListView(generics.ListAPIView):
 class AnswerGroupListView(generics.ListCreateAPIView):
     queryset = AnswerGroup.objects.all()
     serializer_class = AnswerGroupSerializer
-
 
 
 class TaskStatusGroupListView(generics.ListCreateAPIView):
