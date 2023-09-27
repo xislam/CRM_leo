@@ -6,9 +6,11 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, FormView
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveUpdateAPIView, ListAPIView
 from django_filters import rest_framework as filters
+from rest_framework.response import Response
+
 from .filters import StudentFilter
 from .forms import StudentFilterForm, MailingForm
 from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
@@ -253,3 +255,23 @@ class UniversityListView(generics.ListAPIView):
 class CourseListView(generics.ListAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+
+class StudentCvCreateView(generics.CreateAPIView):
+    serializer_class = StudentCVSerializer
+
+    def create(self, request, *args, **kwargs):
+        telegram_user_id = request.data.get('telegram_user_id')
+
+        # Поиск студента по telegram_user_id
+        try:
+            student = Student.objects.get(telegram_user_id=telegram_user_id)
+        except Student.DoesNotExist:
+            return Response({'detail': 'Студент с указанным Telegram ID не найден.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Создание объекта StudentCV и связывание его с найденным студентом
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(student=student)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

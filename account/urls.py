@@ -1,7 +1,8 @@
 from django.urls import path
 
 from . import views
-from .views import StudentCreateView, StudentDetailUpdateView, StudentListView, StudentListMailingView, CourseListView
+from .views import StudentCreateView, StudentDetailUpdateView, StudentListView, StudentListMailingView, CourseListView, \
+    StudentCvCreateView
 
 urlpatterns = [
     path('create/', StudentCreateView.as_view(), name='student-create'),
@@ -29,5 +30,6 @@ urlpatterns = [
     path('dataknowledgefree/', views.DataKnowledgeFreeListView.as_view(), name='dataknowledgefree-list'),
     path('dataknowledge/', views.DataKnowledgeListView.as_view(), name='dataknowledge-list'),
     path('courses/', CourseListView.as_view(), name='course-list'),
+    path('create-student-cv/', StudentCvCreateView.as_view(), name='create-student-cv'),
 
 ]
