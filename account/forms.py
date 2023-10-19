@@ -101,7 +101,7 @@ class StudentForm(TranslationModelForm):
         fields = ('full_name', 'mobile_phone', 'email', 'tg_nickname', 'age', 'gender', 'before_university',
                   'university', 'faculty', 'course', 'interest_first', 'other_interest_first', 'interest_second',
                   'other_interest_second', 'interest_third', 'other_interest_third', 'manager_status',
-                  'education_status', 'hours_per_week')
+                  'education_status', 'hours_per_week', 'projects')
 
 
 class StudentCVForm(TranslationModelForm):
@@ -125,7 +125,8 @@ class GroupStudentForm(TranslationModelForm):
 class ProjectForm(TranslationModelForm):
     class Meta:
         model = Project
-        fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'grade')
+        fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'grade', 'group_grade', 'personal_grade',
+                  'deadline_compliance', 'manager_recommendation', 'intricacy_coefficient')
 
 
 class CommentForm(TranslationModelForm):
