@@ -1,9 +1,12 @@
 from django.contrib import admin, messages
 from django.contrib.admin import TabularInline
+from django.db.models import Q, Count
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 from django.urls import reverse
 from django import forms
+
+from account.filters import InterestFirstFilter, InterestSecondFilter, InterestThirdFilter
 from account.forms import UserInterestsFirstForm, StudentForm, UserInterestsSecondForm, UserInterestsThirdForm, \
     GroupStudentForm, CourseForm, StudentCVForm, UniversityForm, BeforeUniversityForm, StudentPortfolioForm, \
     ChapterForm, UnderSectionForm, DataKnowledgeForm, DataKnowledgeFreeForm, TaskGroupForm, TaskStudentForm, \
@@ -36,15 +39,28 @@ class MailingSelectionForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-
+from django.contrib import admin
+from .models import Student
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     form = StudentForm
-    list_display = ('full_name', 'university', 'course', 'hours_per_week')
-    list_filter = ('university', 'before_university', 'course',)
+    list_display = ('full_name', 'university', 'course', 'hours_per_week', 'total_rating', 'projects_count')
+    list_filter = ('university', 'before_university', 'course', InterestFirstFilter, InterestSecondFilter, InterestThirdFilter)
     search_fields = ('full_name', 'email', 'tg_nickname')
     actions = ['send_custom_email']
     inlines = [StudentCVInline, StudentPortfolioInline]
+    ordering = ('-total_rating',)
+
+
+    def total_rating(self, obj):
+        return obj.calculate_total_rating()
+
+    total_rating.short_description = 'Общий рейтинг'
+
+    def projects_count(self, obj):
+        return obj.projects_in_group()
+
+    projects_count.short_description = 'Количество проектов в группе'
 
 
 @admin.register(StudentCV)
@@ -55,7 +71,6 @@ class StudentCVAdmin(admin.ModelAdmin):
 @admin.register(University)
 class UniversityAdmin(admin.ModelAdmin):
     form = UniversityForm
-
 
 
 @admin.register(BeforeUniversity)
@@ -160,6 +175,7 @@ class TaskStudentInline(TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
     inlines = [CommentInline, TaskStudentInline, TaskGroupInline]
+    readonly_fields = ('grade',)
 
 
 class TaskStatusStudentInline(TabularInline):
