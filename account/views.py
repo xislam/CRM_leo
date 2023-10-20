@@ -136,6 +136,7 @@ class StudentCVDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'student__tg_nickname'
 
 
+
 class GroupStudentListView(generics.ListAPIView):
     queryset = GroupStudent.objects.all()
     serializer_class = GroupStudentSerializer
@@ -261,17 +262,12 @@ class StudentCvCreateView(generics.CreateAPIView):
     serializer_class = StudentCVSerializer
 
     def create(self, request, *args, **kwargs):
-        telegram_user_id = request.data.get('telegram_user_id')
-
-        # Поиск студента по telegram_user_id
-        try:
-            student = Student.objects.get(telegram_user_id=telegram_user_id)
-        except Student.DoesNotExist:
+        student_tg_nickname = self.kwargs.get('student_tg_nickname')
+        student = Student.objects.filter(tg_nickname=student_tg_nickname).first()
+        if student:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(student=student)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
             return Response({'detail': 'Студент с указанным Telegram ID не найден.'}, status=status.HTTP_404_NOT_FOUND)
-
-        # Создание объекта StudentCV и связывание его с найденным студентом
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(student=student)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)

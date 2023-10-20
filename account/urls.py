@@ -14,7 +14,7 @@ urlpatterns = [
     path('user_interests_third/', views.UserInterestsThirdFirstList.as_view(), name='user_interests_third-list'),
     path('user_before_university/', views.BeforeUniversityFirstList.as_view(), name='user_interests_university-list'),
     path('user_university/', views.UniversityListView.as_view(), name='user_university-list'),
-    path('student_cv/<str:tg_nickname>/', views.StudentCVDetailView.as_view(), name='studentcv-detail'),
+    path('student_cv/<str:student__tg_nickname>/', views.StudentCVDetailView.as_view(), name='studentcv-detail'),
     path('groups/', views.GroupStudentListView.as_view(), name='groupstudent-list'),
     path('groups/<int:pk>/', views.GroupStudentDetailView.as_view(), name='groupstudent-detail'),
     path('projects/', views.ProjectListView.as_view(), name='project-list'),
@@ -30,6 +30,6 @@ urlpatterns = [
     path('dataknowledgefree/', views.DataKnowledgeFreeListView.as_view(), name='dataknowledgefree-list'),
     path('dataknowledge/', views.DataKnowledgeListView.as_view(), name='dataknowledge-list'),
     path('courses/', CourseListView.as_view(), name='course-list'),
-    path('create-student-cv/', StudentCvCreateView.as_view(), name='create-student-cv'),
+    path('create-student-cv/<str:student_tg_nickname>', StudentCvCreateView.as_view(), name='create-student-cv'),
 
 ]
