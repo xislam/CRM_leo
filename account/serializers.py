@@ -160,12 +160,14 @@ class FileSerializer(serializers.ModelSerializer):
         model = File
         fields = '__all__'
 
+
 class DataKnowledgeFileSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True)
 
     class Meta:
         model = DataKnowledge
         fields = '__all__'
+
 
 class DataKnowledgeFreeFileSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True)

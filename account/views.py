@@ -17,7 +17,7 @@ from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, \
-    DataKnowledge, University, Course  # Предположим, у вас есть модель Student
+    DataKnowledge, University, Course, File  # Предположим, у вас есть модель Student
 from .serializers import StudentSerializer, \
     UserInterestsFirstSerializer, \
     UserInterestsSecondSerializer, \
@@ -277,12 +277,12 @@ class DataKnowledgeByChapter(generics.ListAPIView):
     serializer_class = DataKnowledgeFileSerializer
 
     def get_queryset(self):
-        chapter_name = self.kwargs['chapter_name']
-        return DataKnowledge.objects.filter(chapter__name=chapter_name)
+        chapter = self.kwargs['chapter']
+        return DataKnowledge.objects.filter(chapter__name=chapter)
 
 class DataKnowledgeFreeByChapter(generics.ListAPIView):
     serializer_class = DataKnowledgeFreeFileSerializer
 
     def get_queryset(self):
-        chapter_name = self.kwargs['chapter_name']
-        return DataKnowledgeFree.objects.filter(chapter__name=chapter_name)
+        chapter = self.kwargs['chapter']
+        return DataKnowledgeFree.objects.filter(chapter__name=chapter)

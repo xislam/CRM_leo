@@ -31,6 +31,7 @@ urlpatterns = [
     path('dataknowledge/', views.DataKnowledgeListView.as_view(), name='dataknowledge-list'),
     path('courses/', CourseListView.as_view(), name='course-list'),
     path('create-student-cv/<str:student_tg_nickname>', StudentCvCreateView.as_view(), name='create-student-cv'),
-    path('dataknowledge/<str:chapter_name>/', views.DataKnowledgeByChapter.as_view(), name='dataknowledge-by-chapter'),
-    path('dataknowledgefree/<str:chapter_name>/', views.DataKnowledgeFreeByChapter.as_view(), name='dataknowledgefree-by-chapter'),
+    path('dataknowledge/<str:chapter>/', views.DataKnowledgeByChapter.as_view(), name='dataknowledge-by-chapter'),
+    path('dataknowledgefree/<str:chapter>/', views.DataKnowledgeFreeByChapter.as_view(),
+         name='dataknowledgefree-by-chapter'),
 ]
