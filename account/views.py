@@ -29,7 +29,8 @@ from .serializers import StudentSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
-    CourseSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    CourseSerializer, DataKnowledgeFileSerializer, \
+    DataKnowledgeFreeFileSerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -271,3 +272,17 @@ class StudentCvCreateView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'detail': 'Студент с указанным Telegram ID не найден.'}, status=status.HTTP_404_NOT_FOUND)
+
+class DataKnowledgeByChapter(generics.ListAPIView):
+    serializer_class = DataKnowledgeFileSerializer
+
+    def get_queryset(self):
+        chapter_name = self.kwargs['chapter_name']
+        return DataKnowledge.objects.filter(chapter__name=chapter_name)
+
+class DataKnowledgeFreeByChapter(generics.ListAPIView):
+    serializer_class = DataKnowledgeFreeFileSerializer
+
+    def get_queryset(self):
+        chapter_name = self.kwargs['chapter_name']
+        return DataKnowledgeFree.objects.filter(chapter__name=chapter_name)

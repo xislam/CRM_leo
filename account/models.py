@@ -221,7 +221,6 @@ class Project(models.Model):
     intricacy_coefficient = models.FloatField(max_length=10, default=0, verbose_name=_('Коэффициент сложности'),
                                               validators=[MinValueValidator(0), MaxValueValidator(1.5)])
 
-
     def __str__(self):
         return self.name
 
@@ -238,11 +237,9 @@ class Project(models.Model):
             return grade
         return None
 
-
     def save(self, *args, **kwargs):
         self.grade = self.calculate_project_grade()
         super().save(*args, **kwargs)
-
 
     class Meta:
         verbose_name = _('Проект')
@@ -427,11 +424,16 @@ class TaskStatusStudent(models.Model):
         verbose_name_plural = _('Статус задачи студента')
 
 
+class File(models.Model):
+    file = models.FileField(upload_to='Files', verbose_name='Файлы')
+
+
 class DataKnowledgeFree(models.Model):
     chapter = models.ForeignKey('Chapter', verbose_name=_('Раздел'), on_delete=models.CASCADE)
     under_section = models.ForeignKey('UnderSection', verbose_name=_('Под раздел'), on_delete=models.CASCADE)
     title = models.TextField(verbose_name=_('Тема'))
     url = models.TextField(verbose_name=_('Ссылки'))
+    files = models.ManyToManyField('File', verbose_name='Файлы')
 
     def __str__(self):
         return self.chapter.name
@@ -468,6 +470,7 @@ class DataKnowledge(models.Model):
     under_section = models.ForeignKey(UnderSection, verbose_name=_('Под раздел'), on_delete=models.CASCADE)
     title = models.TextField(verbose_name=_('Тема'))
     url = models.TextField(verbose_name=_('Ссылки'))
+    files = models.ManyToManyField('File', verbose_name='Файлы')
 
     def __str__(self):
         return self.chapter.name
