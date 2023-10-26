@@ -133,7 +133,7 @@ class BeforeUniversityFirstList(generics.ListAPIView):
 class StudentCVDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudentCV.objects.all()
     serializer_class = StudentCVSerializer
-    lookup_field = 'student__tg_nickname'
+    lookup_field = 'student__telegram_user_id'
 
 
 
@@ -262,8 +262,8 @@ class StudentCvCreateView(generics.CreateAPIView):
     serializer_class = StudentCVSerializer
 
     def create(self, request, *args, **kwargs):
-        student_tg_nickname = self.kwargs.get('student_tg_nickname')
-        student = Student.objects.filter(tg_nickname=student_tg_nickname).first()
+        telegram_user_id = self.kwargs.get('telegram_user_id')
+        student = Student.objects.filter(telegram_user_id=telegram_user_id).first()
         if student:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
