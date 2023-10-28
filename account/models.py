@@ -431,7 +431,7 @@ class TaskStatusStudent(models.Model):
 
 
 class File(models.Model):
-    name = models.CharField(max_length = 255, verbose_name=_('Имя файла'), blank = True, null = True)
+    name = models.CharField(max_length=255, verbose_name=_('Имя файла'), blank=True, null=True)
     file = models.FileField(upload_to='Files', verbose_name='Файлы')
 
     def __str__(self):

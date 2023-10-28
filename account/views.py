@@ -137,7 +137,6 @@ class StudentCVDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'student__tg_nickname'
 
 
-
 class GroupStudentListView(generics.ListAPIView):
     queryset = GroupStudent.objects.all()
     serializer_class = GroupStudentSerializer
@@ -273,12 +272,14 @@ class StudentCvCreateView(generics.CreateAPIView):
         else:
             return Response({'detail': 'Студент с указанным Telegram ID не найден.'}, status=status.HTTP_404_NOT_FOUND)
 
+
 class DataKnowledgeByChapter(generics.ListAPIView):
     serializer_class = DataKnowledgeFileSerializer
 
     def get_queryset(self):
         chapter = self.kwargs['chapter']
         return DataKnowledge.objects.filter(chapter__name=chapter)
+
 
 class DataKnowledgeFreeByChapter(generics.ListAPIView):
     serializer_class = DataKnowledgeFreeFileSerializer

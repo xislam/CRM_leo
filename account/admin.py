@@ -242,4 +242,4 @@ class TestTaskAdmin(admin.ModelAdmin):
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('file',)
+    list_display = ('name', 'file')
