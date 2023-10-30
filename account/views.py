@@ -17,7 +17,7 @@ from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, \
-    DataKnowledge, University, Course  # Предположим, у вас есть модель Student
+    DataKnowledge, University, Course, File  # Предположим, у вас есть модель Student
 from .serializers import StudentSerializer, \
     UserInterestsFirstSerializer, \
     UserInterestsSecondSerializer, \
@@ -29,7 +29,8 @@ from .serializers import StudentSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
-    CourseSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    CourseSerializer, DataKnowledgeFileSerializer, \
+    DataKnowledgeFreeFileSerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -134,7 +135,6 @@ class StudentCVDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudentCV.objects.all()
     serializer_class = StudentCVSerializer
     lookup_field = 'student__telegram_user_id'
-
 
 
 class GroupStudentListView(generics.ListAPIView):
@@ -276,3 +276,64 @@ class StudentCvCreateView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'detail': 'Студент с указанным Telegram ID не найден.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class DataKnowledgeByChapter(generics.ListAPIView):
+    serializer_class = DataKnowledgeFileSerializer
+
+    def get_queryset(self):
+        chapter = self.kwargs['chapter']
+        return DataKnowledge.objects.filter(chapter__name=chapter)
+
+
+class DataKnowledgeFreeByChapter(generics.ListAPIView):
+    serializer_class = DataKnowledgeFreeFileSerializer
+
+    def get_queryset(self):
+        chapter = self.kwargs['chapter']
+        return DataKnowledgeFree.objects.filter(chapter__name=chapter)
+
+
+# Добавление
+
+
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
+from account.models import Order
+
+
+@csrf_exempt  # Убедитесь, что CSRF защита выключена для этого обработчика
+def robokassa_result(request):
+    if request.method == 'POST':
+        # Получение параметров платежа из POST-запроса
+        payment_status = request.POST.get('OutSum')  # Получаем статус платежа из параметров запроса
+        order_id = request.POST.get('InvId')  # Получаем ID заказа из параметров запроса
+
+        # Проверка подлинности запроса, например, с использованием проверки цифровой подписи
+        # Если проверка не пройдена, можно отправить ответ с ошибкой или проигнорировать запрос
+
+        # Нахождение соответствующего заказа в CRM по inv_id
+        try:
+            order = Order.objects.get(id=order_id)
+            order.payment_status = payment_status
+            order.save()
+            return HttpResponse('OK')  # Возвращаем успешный ответ Робокассе
+        except Order.DoesNotExist:
+            return HttpResponse('Order not found', status=400)  # Возвращаем ошибку, если заказ не найден
+        else:
+            return HttpResponse('Invalid request method',
+                                status=405)  # Возвращаем ошибку, если используется неправильный метод запроса
+
+        # Изменение статуса заказа в соответствии со статусом платежа
+        if out_sum == order.amount:  # Проверяем, что сумма платежа совпадает с суммой заказа
+            order.status = 'paid'
+        else:
+            order.status = 'payment_failed'
+
+        order.save()
+
+        # Отправка ответа, чтобы уведомить платежную систему, что все прошло успешно
+        return HttpResponse('OK')
+
+    return HttpResponse('Method not allowed', status=405)

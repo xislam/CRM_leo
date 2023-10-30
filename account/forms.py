@@ -101,7 +101,7 @@ class StudentForm(TranslationModelForm):
         fields = ('full_name', 'mobile_phone', 'email', 'tg_nickname', 'age', 'gender', 'before_university',
                   'university', 'faculty', 'course', 'interest_first', 'other_interest_first', 'interest_second',
                   'other_interest_second', 'interest_third', 'other_interest_third', 'manager_status',
-                  'education_status', 'hours_per_week', 'projects','telegram_user_id')
+                  'education_status', 'hours_per_week', 'projects', 'telegram_user_id')
 
 
 class StudentCVForm(TranslationModelForm):
@@ -186,13 +186,13 @@ class TaskStatusStudentForm(TranslationModelForm):
 class DataKnowledgeFreeForm(TranslationModelForm):
     class Meta:
         model = DataKnowledgeFree
-        fields = ('chapter', 'under_section', 'title', 'url')
+        fields = ('chapter', 'under_section', 'title', 'url', 'files')
 
 
 class DataKnowledgeForm(TranslationModelForm):
     class Meta:
         model = DataKnowledge
-        fields = ('chapter', 'under_section', 'title', 'url')
+        fields = ('chapter', 'under_section', 'title', 'url', 'files')
 
 
 class ChapterForm(TranslationModelForm):
@@ -211,3 +211,6 @@ class MailingTranslationForm(TranslationModelForm):
     class Meta:
         model = Mailing
         fields = ('subject', 'title', 'message', 'photo', 'student')
+
+
+

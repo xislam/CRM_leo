@@ -30,6 +30,11 @@ urlpatterns = [
     path('dataknowledgefree/', views.DataKnowledgeFreeListView.as_view(), name='dataknowledgefree-list'),
     path('dataknowledge/', views.DataKnowledgeListView.as_view(), name='dataknowledge-list'),
     path('courses/', CourseListView.as_view(), name='course-list'),
+    path('dataknowledge/<str:chapter>/', views.DataKnowledgeByChapter.as_view(), name='dataknowledge-by-chapter'),
+    path('dataknowledgefree/<str:chapter>/', views.DataKnowledgeFreeByChapter.as_view(),
+         name='dataknowledgefree-by-chapter'),
     path('create-student-cv/<int:telegram_user_id>', StudentCvCreateView.as_view(), name='create-student-cv'),
+    ##### Добавления
+    path('robokassa-result/', views.robokassa_result, name='robokassa_result'),
 
 ]
