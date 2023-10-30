@@ -166,7 +166,10 @@ class StudentCV(models.Model):
     create_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата создания'))
 
     def __str__(self):
-        return self.student.full_name
+        if self.student:
+            return self.student.full_name
+        else:
+            return "StudentCV without associated student"
 
     class Meta:
         verbose_name = _('Резюме студента')
@@ -179,7 +182,10 @@ class StudentPortfolio(models.Model):
     create_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата создания'))
 
     def __str__(self):
-        return self.student.full_name
+        if self.student:
+            return self.student.full_name
+        else:
+            return "StudentCV without associated student"
 
     class Meta:
         verbose_name = _('Портфолио студента')
