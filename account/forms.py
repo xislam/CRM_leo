@@ -186,13 +186,13 @@ class TaskStatusStudentForm(TranslationModelForm):
 class DataKnowledgeFreeForm(TranslationModelForm):
     class Meta:
         model = DataKnowledgeFree
-        fields = ('chapter', 'under_section', 'title', 'url')
+        fields = ('chapter', 'under_section', 'title', 'url', 'files')
 
 
 class DataKnowledgeForm(TranslationModelForm):
     class Meta:
         model = DataKnowledge
-        fields = ('chapter', 'under_section', 'title', 'url')
+        fields = ('chapter', 'under_section', 'title', 'url', 'files')
 
 
 class ChapterForm(TranslationModelForm):

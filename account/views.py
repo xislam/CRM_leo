@@ -17,7 +17,7 @@ from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, \
-    DataKnowledge, University, Course  # Предположим, у вас есть модель Student
+    DataKnowledge, University, Course, File  # Предположим, у вас есть модель Student
 from .serializers import StudentSerializer, \
     UserInterestsFirstSerializer, \
     UserInterestsSecondSerializer, \
@@ -29,7 +29,8 @@ from .serializers import StudentSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
-    CourseSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    CourseSerializer, DataKnowledgeFileSerializer, \
+    DataKnowledgeFreeFileSerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -134,7 +135,6 @@ class StudentCVDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudentCV.objects.all()
     serializer_class = StudentCVSerializer
     lookup_field = 'student__telegram_user_id'
-
 
 
 class GroupStudentListView(generics.ListAPIView):
@@ -276,3 +276,19 @@ class StudentCvCreateView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'detail': 'Студент с указанным Telegram ID не найден.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class DataKnowledgeByChapter(generics.ListAPIView):
+    serializer_class = DataKnowledgeFileSerializer
+
+    def get_queryset(self):
+        chapter = self.kwargs['chapter']
+        return DataKnowledge.objects.filter(chapter__name=chapter)
+
+
+class DataKnowledgeFreeByChapter(generics.ListAPIView):
+    serializer_class = DataKnowledgeFreeFileSerializer
+
+    def get_queryset(self):
+        chapter = self.kwargs['chapter']
+        return DataKnowledgeFree.objects.filter(chapter__name=chapter)

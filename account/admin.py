@@ -15,7 +15,7 @@ from account.forms import UserInterestsFirstForm, StudentForm, UserInterestsSeco
 from account.models import Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
     University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
-    AnswerTestTask, TestTask, DataKnowledgeFree
+    AnswerTestTask, TestTask, DataKnowledgeFree, File
 
 
 class StudentCVInline(TabularInline):
@@ -239,3 +239,7 @@ class TestTaskAdmin(admin.ModelAdmin):
     form = TestTaskForm
     # Add the TaskStatusStudentInline to the inlines list
     inlines = [AnswerAnswerGroupInline]
+
+@admin.register(File)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ('name', 'file')

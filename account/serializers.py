@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Student, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, BeforeUniversity, University, \
     Course, StudentCV, GroupStudent, Project, Comment, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
-    UnderSection, DataKnowledge
+    UnderSection, DataKnowledge, File
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -149,6 +149,28 @@ class DataKnowledgeSerializer(serializers.ModelSerializer):
 class DataKnowledgeFreeSerializer(serializers.ModelSerializer):
     chapter = ChapterSerializer()
     under_section = UnderSectionSerializer()
+
+    class Meta:
+        model = DataKnowledgeFree
+        fields = '__all__'
+
+
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = '__all__'
+
+
+class DataKnowledgeFileSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = DataKnowledge
+        fields = '__all__'
+
+
+class DataKnowledgeFreeFileSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True)
 
     class Meta:
         model = DataKnowledgeFree
