@@ -219,12 +219,9 @@ class Project(models.Model):
     intricacy = models.CharField(max_length=250, verbose_name=_('Сложность'))
     start_date = models.DateField(verbose_name=_('Дата начала'), null=True, blank=True)
     end_date = models.DateField(verbose_name=_('Дата окончания'), null=True, blank=True)
-    grade = models.CharField(max_length=250, default=0, verbose_name=_('Оценка'))
-    group_grade = models.FloatField(max_length=10, default=0, verbose_name=_('Групповая оценка'))
-    personal_grade = models.FloatField(max_length=10, default=0, verbose_name=_('Личная оценка'))
-    deadline_compliance = models.FloatField(max_length=10, default=0, verbose_name=_('Соблюдение дедлайнов'))
-    manager_recommendation = models.FloatField(max_length=10, default=0, verbose_name=_('Рекомендация менеджера'))
-    intricacy_coefficient = models.FloatField(max_length=10, default=0, verbose_name=_('Коэффициент сложности'),
+    group_grade = models.FloatField(max_length=10, verbose_name=_('Групповая оценка'), blank=True, null=True)
+    intricacy_coefficient = models.FloatField(max_length=10, verbose_name='Коэффициент сложности',
+                                              blank=True, null=True,
                                               validators=[MinValueValidator(0), MaxValueValidator(1.5)])
 
     def __str__(self):
@@ -236,12 +233,12 @@ class Project(models.Model):
             return (self.end_date - self.start_date).days
         return None
 
-    def calculate_project_grade(self):
-        if self.start_date and self.end_date:
-            grade = (0.3 * self.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-                     0.2 * self.manager_recommendation) * self.intricacy_coefficient
-            return grade
-        return None
+    # def calculate_project_grade(self):
+    #     if self.start_date and self.end_date:
+    #         grade = (0.3 * self.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+    #                  0.2 * self.manager_recommendation) * self.intricacy_coefficient
+    #         return grade
+    #     return None
 
     def save(self, *args, **kwargs):
         self.grade = self.calculate_project_grade()
@@ -372,10 +369,22 @@ class TaskStudent(models.Model):
     project_cost = models.CharField(max_length=120, verbose_name=_("Стоимость"), null=True, blank=True)
     start_date = models.DateField(verbose_name=_('Дата начала'), null=True, blank=True)
     end_date = models.DateField(verbose_name=_('Дата окончания'), null=True, blank=True)
-    grade = models.IntegerField(verbose_name=_('оценка'), null=True, blank=True)
+    personal_grade = models.FloatField(max_length=10, verbose_name=_('Личная оценка'), blank=True, null=True)
+    deadline_compliance = models.FloatField(max_length=10, verbose_name=_('Соблюдение дедлайнов'), blank=True,
+                                            null=True)
+    manager_recommendation = models.FloatField(max_length=10, verbose_name=_('Рекомендация менеджера'), blank=True,
+                                               null=True)
+    rating = models.CharField(max_length=250, verbose_name=_('Рейтинг'), blank=True, null=True)
 
     def __str__(self):
         return self.student.full_name
+
+    def calculate_rating(self):
+        if self.start_date and self.end_date:
+            rating = (0.3 * self.project.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+                      0.2 * self.manager_recommendation) * self.project.intricacy_coefficient
+            return rating
+        return None
 
     @property
     def execution_period(self):
