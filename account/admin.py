@@ -47,18 +47,18 @@ from .models import Student
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     form = StudentForm
-    list_display = ('full_name', 'university', 'course', 'hours_per_week', 'total_rating', 'projects_count')
+    list_display = ('full_name', 'university', 'course', 'hours_per_week', 'rating', 'projects_count')
     list_filter = (
     'university', 'before_university', 'course', InterestFirstFilter, InterestSecondFilter, InterestThirdFilter)
     search_fields = ('full_name', 'email', 'tg_nickname')
     actions = ['send_custom_email']
     inlines = [StudentCVInline, StudentPortfolioInline]
-    ordering = ('-total_rating',)
+    ordering = ('-rating',)
 
-    def total_rating(self, obj):
-        return obj.calculate_total_rating()
-
-    total_rating.short_description = 'Общий рейтинг'
+    # def total_rating(self, obj):
+    #     return obj.calculate_total_rating()
+    #
+    # rating.short_description = 'Общий рейтинг'
 
     def projects_count(self, obj):
         return obj.projects_in_group()

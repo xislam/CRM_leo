@@ -168,7 +168,7 @@ class TaskStudentForm(TranslationModelForm):
     class Meta:
         model = TaskStudent
         fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date',  'personal_grade',
-                  'deadline_compliance', 'manager_recommendation', 'rating')
+                  'deadline_compliance', 'manager_recommendation')
 
 
 class AnswersStudentForm(TranslationModelForm):

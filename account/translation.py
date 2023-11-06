@@ -93,7 +93,7 @@ class TaskStatusGroupTranslationOptions(TranslationOptions):
 
 @register(TaskStudent)
 class TaskStudentTranslationOptions(TranslationOptions):
-    fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date', 'rating')
+    fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date')
 
 
 @register(TaskStatusStudent)

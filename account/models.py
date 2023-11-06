@@ -137,7 +137,7 @@ class Student(models.Model):
     hours_per_week = models.PositiveIntegerField(verbose_name=_('Сколько часов готовы уделять в неделю'))
     telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
     projects = models.ManyToManyField('Project', related_name='students', blank=True, verbose_name=_('Проекты'))
-    total_rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
+    rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
 
     def __str__(self):
         return self.full_name
@@ -153,7 +153,18 @@ class Student(models.Model):
             total=Sum('num_projects'))['total']
         return project_count
 
-    # projects_in_group.short_description = 'Количество проектов в группе'
+    # def update_rating(sender, instance, **kwargs):
+    #     student = instance.student
+    #     project = instance.project
+    #     if student.personal_grade is not None and student.deadline_compliance is not None and \
+    #             student.manager_recommendation is not None and student.group_grade is not None and \
+    #             student.intricacy_coefficient is not None:
+    #         # Вычисляем новое значение total_rating
+    #         rating = (0.3 * student.personal_grade + 0.2 * student.deadline_compliance +
+    #                   0.2 * student.manager_recommendation + 0.3 * student.group_grade)\
+    #                  * student.intricacy_coefficient
+    #         student.rating = rating
+    #         student.save()
 
     class Meta:
         verbose_name = _('Студент')
@@ -227,22 +238,43 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+    def calculate_rating(self):
+        task = self.task.all()
+
+        if task.personal_grade is not None and task.deadline_compliance is not None and \
+                task.manager_recommendation is not None and self.group_grade is not None and \
+                self.intricacy_coefficient is not None:
+            rating = (0.3 * task.personal_grade + 0.2 * task.deadline_compliance +
+                      0.2 * task.manager_recommendation + 0.3 * self.group_grade) \
+                     * self.intricacy_coefficient
+            return rating
+
     @property
     def duration(self):
         if self.start_date and self.end_date:
             return (self.end_date - self.start_date).days
         return None
 
-    # def calculate_project_grade(self):
-    #     if self.start_date and self.end_date:
-    #         grade = (0.3 * self.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-    #                  0.2 * self.manager_recommendation) * self.intricacy_coefficient
-    #         return grade
-    #     return None
-
     def save(self, *args, **kwargs):
-        self.grade = self.calculate_project_grade()
         super().save(*args, **kwargs)
+        tasks = self.task.all()
+        student = self.task.student
+        for task in tasks:
+            rating = self.calculate_rating()
+            if task:
+                student.rating = rating
+                student.save()
+
+    # # def calculate_project_grade(self):
+    # #     if self.start_date and self.end_date:
+    # #         grade = (0.3 * self.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+    # #                  0.2 * self.manager_recommendation) * self.intricacy_coefficient
+    # #         return grade
+    # #     return None
+    #
+    # def save(self, *args, **kwargs):
+    #     self.grade = self.calculate_project_grade()
+    #     super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = _('Проект')
@@ -363,8 +395,9 @@ class TaskStatusGroup(models.Model):
 
 
 class TaskStudent(models.Model):
-    project = models.ForeignKey(Project, verbose_name=_('Проект'), on_delete=models.CASCADE, null=True, blank=True)
-    student = models.ForeignKey(Student, verbose_name=_('Студент'), on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, verbose_name=_('Проект'), on_delete=models.CASCADE, null=True, blank=True,
+                                related_name='task')
+    student = models.ForeignKey(Student, verbose_name=_('Студент'), on_delete=models.CASCADE, related_name='student')
     description = models.TextField(verbose_name=_('Описание'))
     project_cost = models.CharField(max_length=120, verbose_name=_("Стоимость"), null=True, blank=True)
     start_date = models.DateField(verbose_name=_('Дата начала'), null=True, blank=True)
@@ -374,17 +407,16 @@ class TaskStudent(models.Model):
                                             null=True)
     manager_recommendation = models.FloatField(max_length=10, verbose_name=_('Рекомендация менеджера'), blank=True,
                                                null=True)
-    rating = models.CharField(max_length=250, verbose_name=_('Рейтинг'), blank=True, null=True)
 
     def __str__(self):
         return self.student.full_name
 
-    def calculate_rating(self):
-        if self.start_date and self.end_date:
-            rating = (0.3 * self.project.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-                      0.2 * self.manager_recommendation) * self.project.intricacy_coefficient
-            return rating
-        return None
+    # def calculate_rating(self):
+    #     if self.start_date and self.end_date:
+    #         rating = (0.3 * self.project.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+    #                   0.2 * self.manager_recommendation) * self.project.intricacy_coefficient
+    #         return rating
+    #     return None
 
     @property
     def execution_period(self):
@@ -392,23 +424,32 @@ class TaskStudent(models.Model):
             return (self.end_date - self.start_date).days
         return None
 
-    def calculate_total_rating(self):
-        project_grades = self.student.projects.aggregate(Sum('grade'))['grade__sum'] or 0
-        task_grades = self.student.taskstudent_set.aggregate(Sum('grade'))['grade__sum'] or 0
-        total_rating = (project_grades + task_grades) * 0.5
-        return total_rating
+    def calculate_rating(self):
+        if self.personal_grade is not None and self.deadline_compliance is not None and \
+                self.manager_recommendation is not None and self.project.group_grade is not None and \
+                self.project.intricacy_coefficient is not None:
+            rating = (0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+                      0.2 * self.manager_recommendation + 0.3 * self.project.group_grade) \
+                     * self.project.intricacy_coefficient
+            return rating
+
+    # def calculate_total_rating(self):
+    #     project_grades = self.student.projects.aggregate(Sum('grade'))['grade__sum'] or 0
+    #     task_grades = self.student.taskstudent_set.aggregate(Sum('grade'))['grade__sum'] or 0
+    #     total_rating = (project_grades + task_grades) * 0.5
+    #     return total_rating
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        total_rating = self.calculate_total_rating()
+        rating = self.calculate_rating()
         student = self.student
         if student:
-            student.total_rating = total_rating
-            student.save()  # Сохраняем обновлен
+            student.rating = rating
+            student.save()
 
     class Meta:
-        verbose_name = _('Задача студента по проекту')
-        verbose_name_plural = _('Задача студента по проекту')
+        verbose_name = 'Задача студента по проекту'
+        verbose_name_plural = 'Задача студента по проекту'
 
 
 class AnswersStudent(models.Model):
