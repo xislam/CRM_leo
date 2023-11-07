@@ -138,7 +138,7 @@ class Student(models.Model):
     telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
     projects = models.ManyToManyField('Project', related_name='students', blank=True, verbose_name=_('Проекты'))
 
-    rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
+    # rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
 
     def __str__(self):
         return self.full_name
@@ -154,10 +154,9 @@ class Student(models.Model):
             total=Sum('num_projects'))['total']
         return project_count
 
-    def update_rating(self):
+    def calculate_total_rating(self):
         total_rating = self.student.aggregate(Sum('task_rating'))['task_rating__sum'] or 0
-        self.rating = total_rating
-        super().save()
+        return total_rating
 
     class Meta:
         verbose_name = _('Студент')
@@ -230,7 +229,6 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
-
 
     @property
     def duration(self):
@@ -395,13 +393,6 @@ class TaskStudent(models.Model):
     def __str__(self):
         return self.student.full_name
 
-    # def calculate_rating(self):
-    #     if self.start_date and self.end_date:
-    #         rating = (0.3 * self.project.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-    #                   0.2 * self.manager_recommendation) * self.project.intricacy_coefficient
-    #         return rating
-    #     return None
-
     @property
     def execution_period(self):
         if self.start_date and self.end_date:
@@ -412,18 +403,15 @@ class TaskStudent(models.Model):
         if self.personal_grade is not None and self.deadline_compliance is not None and \
                 self.manager_recommendation is not None and self.project.group_grade is not None and \
                 self.project.intricacy_coefficient is not None:
-            rating = (0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-                      0.2 * self.manager_recommendation + 0.3 * self.project.group_grade) * self.project.intricacy_coefficient
+            rating = round((0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+                            0.2 * self.manager_recommendation + 0.3 * self.project.group_grade)
+                           * self.project.intricacy_coefficient, 1)
             return rating
-
-
 
     def save(self, *args, **kwargs):
         task_rating = self.calculate_task_rating()
         self.task_rating = task_rating
-        self.student.update_rating()
         super().save(*args, **kwargs)
-
 
     class Meta:
         verbose_name = 'Задача студента по проекту'
