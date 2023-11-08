@@ -4,7 +4,7 @@ from modeltranslation.forms import TranslationModelForm
 from account.models import University, Course, BeforeUniversity, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, Student, StudentCV, StudentPortfolio, GroupStudent, Project, Comment, TestTask, AnswerTestTask, \
     TaskGroup, AnswerGroup, TaskStatusGroup, TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
-    UnderSection, DataKnowledge
+    UnderSection, DataKnowledge, Orders
 
 
 class StudentFilterForm(forms.Form):
@@ -211,3 +211,8 @@ class MailingTranslationForm(TranslationModelForm):
     class Meta:
         model = Mailing
         fields = ('subject', 'title', 'message', 'photo', 'student')
+
+class OrdersForm(TranslationModelForm):
+    class Meta:
+        model = Orders
+        fields = '__all__'

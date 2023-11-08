@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Student, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, BeforeUniversity, University, \
     Course, StudentCV, GroupStudent, Project, Comment, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
-    UnderSection, DataKnowledge, File
+    UnderSection, DataKnowledge, File, Orders
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -174,4 +174,10 @@ class DataKnowledgeFreeFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataKnowledgeFree
+        fields = '__all__'
+
+
+class OrdersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Orders
         fields = '__all__'
