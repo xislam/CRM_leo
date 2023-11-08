@@ -175,3 +175,8 @@ class DataKnowledgeFreeFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataKnowledgeFree
         fields = '__all__'
+
+class SubscriptionEndDateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['subscription_end_date']

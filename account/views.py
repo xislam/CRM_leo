@@ -30,7 +30,8 @@ from .serializers import StudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
     CourseSerializer, DataKnowledgeFileSerializer, \
-    DataKnowledgeFreeFileSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    DataKnowledgeFreeFileSerializer, \
+    SubscriptionEndDateSerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -292,3 +293,8 @@ class DataKnowledgeFreeByChapter(generics.ListAPIView):
     def get_queryset(self):
         chapter = self.kwargs['chapter']
         return DataKnowledgeFree.objects.filter(chapter__name=chapter)
+
+
+class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = SubscriptionEndDateSerializer
