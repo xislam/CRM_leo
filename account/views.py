@@ -30,7 +30,7 @@ from .serializers import StudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
     CourseSerializer, DataKnowledgeFileSerializer, \
-    DataKnowledgeFreeFileSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    DataKnowledgeFreeFileSerializer, TaskStudentsSerializer  # Предположим, у вас есть сериализатор StudentSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -202,6 +202,21 @@ class TaskGroupListView(generics.ListAPIView):
     serializer_class = TaskGroupSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_class = TaskGroupFilter
+
+
+class TaskStudentsFilter(django_filters.FilterSet):
+    class Meta:
+        model = TaskStudent
+        fields = {
+            'project__name': ['exact'],
+        }
+
+
+class TaskStudentsListView(generics.ListAPIView):
+    queryset = TaskStudent.objects.all()
+    serializer_class = TaskStudentsSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = TaskStudentsFilter
 
 
 class AnswerGroupListView(generics.ListCreateAPIView):
