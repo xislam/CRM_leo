@@ -55,7 +55,7 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [StudentCVInline, StudentPortfolioInline]
 
     def total_rating(self, obj):
-        return obj.calculate_total_rating()
+        return round(obj.calculate_total_rating(),1)
 
     total_rating.short_description = 'Общий рейтинг'
 
