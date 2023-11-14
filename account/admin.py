@@ -11,11 +11,11 @@ from account.forms import UserInterestsFirstForm, StudentForm, UserInterestsSeco
     GroupStudentForm, CourseForm, StudentCVForm, UniversityForm, BeforeUniversityForm, StudentPortfolioForm, \
     ChapterForm, UnderSectionForm, DataKnowledgeForm, DataKnowledgeFreeForm, TaskGroupForm, TaskStudentForm, \
     TestTaskForm, AnswersStudentForm, TaskStatusStudentForm, CommentForm, TaskStatusGroupForm, AnswerGroupForm, \
-    MailingTranslationForm, ProjectForm, AnswerTestTaskForm
+    MailingTranslationForm, ProjectForm, AnswerTestTaskForm, OrdersForm
 from account.models import Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
     University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
-    AnswerTestTask, TestTask, DataKnowledgeFree, File
+    AnswerTestTask, TestTask, DataKnowledgeFree, File, Orders
 
 
 class StudentCVInline(TabularInline):
@@ -243,3 +243,7 @@ class TestTaskAdmin(admin.ModelAdmin):
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
     list_display = ('name', 'file')
+
+@admin.register(Orders)
+class OrdersAdmin(admin.ModelAdmin):
+    form = OrdersForm
