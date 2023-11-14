@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
-from django.db.models import Max, Sum, Count
+from django.db.models import Max, Sum, Count, Avg
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 
@@ -236,26 +236,39 @@ class Project(models.Model):
             return (self.end_date - self.start_date).days
         return None
 
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     tasks = self.task.all()
-    #     student = self.task.student
-    #     for task in tasks:
-    #         rating = self.calculate_rating()
-    #         if task:
-    #             student.rating = rating
-    #             student.save()
+    def calculate_task_rating(self):
+        if (
+                self.task.all().filter(personal_grade__isnull=False).exists() and
+                self.task.filter(deadline_compliance__isnull=False).exists() and
+                self.task.filter(manager_recommendation__isnull=False).exists() and
+                self.group_grade is not None and
+                self.intricacy_coefficient is not None
+        ):
+            personal_grade_avg = self.task.filter(personal_grade__isnull=False).aggregate(Avg('personal_grade'))[
+                'personal_grade__avg']
+            deadline_compliance_avg = \
+            self.task.filter(deadline_compliance__isnull=False).aggregate(Avg('deadline_compliance'))[
+                'deadline_compliance__avg']
+            manager_recommendation_avg = \
+            self.task.filter(manager_recommendation__isnull=False).aggregate(Avg('manager_recommendation'))[
+                'manager_recommendation__avg']
 
-    # # def calculate_project_grade(self):
-    # #     if self.start_date and self.end_date:
-    # #         grade = (0.3 * self.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-    # #                  0.2 * self.manager_recommendation) * self.intricacy_coefficient
-    # #         return grade
-    # #     return None
-    #
-    # def save(self, *args, **kwargs):
-    #     self.grade = self.calculate_project_grade()
-    #     super().save(*args, **kwargs)
+            rating = round(
+                (
+                        0.3 * personal_grade_avg +
+                        0.2 * deadline_compliance_avg +
+                        0.2 * manager_recommendation_avg +
+                        0.3 * self.group_grade
+                ) * self.intricacy_coefficient, 1
+            )
+            return rating
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        task_rating = self.calculate_task_rating()
+        for task in self.task.all():
+            task.task_rating = task_rating
+            task.save()
 
     class Meta:
         verbose_name = _('Проект')
@@ -391,7 +404,10 @@ class TaskStudent(models.Model):
     task_rating = models.FloatField(max_length=255, verbose_name='Рейтинг за задачу', blank=True, null=True)
 
     def __str__(self):
-        return self.student.full_name
+        if self.student:
+            return self.student.full_name
+        else:
+            return "No student assigned"
 
     @property
     def execution_period(self):
