@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Student, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, BeforeUniversity, University, \
     Course, StudentCV, GroupStudent, Project, Comment, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
-    UnderSection, DataKnowledge, File
+    UnderSection, DataKnowledge, File, Orders
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -91,6 +91,12 @@ class TaskGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TaskStudentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskStudent
+        fields = '__all__'
+
+
 class AnswerGroupSerializer(serializers.ModelSerializer):
     tg_nickname = serializers.CharField(source='user.tg_nickname', read_only=True)
 
@@ -176,7 +182,15 @@ class DataKnowledgeFreeFileSerializer(serializers.ModelSerializer):
         model = DataKnowledgeFree
         fields = '__all__'
 
+
 class SubscriptionEndDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ['subscription_end_date']
+
+
+class OrdersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Orders
+        fields = '__all__'
+
