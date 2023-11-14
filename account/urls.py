@@ -38,5 +38,6 @@ urlpatterns = [
     path('subscription-end-date/<int:pk>', SubscriptionEndDateView.as_view(), name='subscription-end-date'),
 
     path('orders/', OrdersListApiView.as_view(), name='orders'),
+    path('taskstudents/', views.TaskStudentsListView.as_view(), name='taskstudents-list'),
 
 ]

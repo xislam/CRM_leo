@@ -137,7 +137,7 @@ class Student(models.Model):
     telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
     projects = models.ManyToManyField('Project', related_name='students', blank=True, verbose_name=_('Проекты'))
     # total_rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
-    # subscription_end_date = models.DateField(verbose_name='Дата окончания подиски', blank=True, null=True)
+    subscription_end_date = models.DateField(verbose_name='Дата окончания подиски', blank=True, null=True)
 
 
     def __str__(self):
