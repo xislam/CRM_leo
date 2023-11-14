@@ -12,7 +12,7 @@ from django_filters import rest_framework as filters
 from rest_framework.response import Response
 
 from .filters import StudentFilter
-from .forms import StudentFilterForm, MailingForm
+from .forms import StudentFilterForm, MailingForm, PaymentForm
 from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
@@ -297,43 +297,29 @@ class DataKnowledgeFreeByChapter(generics.ListAPIView):
 # Добавление
 
 
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-
-from account.models import Order
+from django.shortcuts import render
+from robokassa.forms import RobokassaForm
 
 
-@csrf_exempt  # Убедитесь, что CSRF защита выключена для этого обработчика
-def robokassa_result(request):
+def payment(request):
     if request.method == 'POST':
-        # Получение параметров платежа из POST-запроса
-        payment_status = request.POST.get('OutSum')  # Получаем статус платежа из параметров запроса
-        order_id = request.POST.get('InvId')  # Получаем ID заказа из параметров запроса
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            sum = form.cleaned_data['sum']
+            inv_id = form.cleaned_data['inv_id']
+            email = form.cleaned_data['email']
+            description = form.cleaned_data['description']
 
-        # Проверка подлинности запроса, например, с использованием проверки цифровой подписи
-        # Если проверка не пройдена, можно отправить ответ с ошибкой или проигнорировать запрос
+            robokassa = RobokassaForm(initial={
+                'OutSum': sum,
+                'InvId': inv_id,
+                'Email': email,
+                'Desc': description
+            })
 
-        # Нахождение соответствующего заказа в CRM по inv_id
-        try:
-            order = Order.objects.get(id=order_id)
-            order.payment_status = payment_status
-            order.save()
-            return HttpResponse('OK')  # Возвращаем успешный ответ Робокассе
-        except Order.DoesNotExist:
-            return HttpResponse('Order not found', status=400)  # Возвращаем ошибку, если заказ не найден
-        else:
-            return HttpResponse('Invalid request method',
-                                status=405)  # Возвращаем ошибку, если используется неправильный метод запроса
+            return render(request, 'payment.html', {'form': robokassa})
+    else:
+        form = PaymentForm()
 
-        # Изменение статуса заказа в соответствии со статусом платежа
-        if out_sum == order.amount:  # Проверяем, что сумма платежа совпадает с суммой заказа
-            order.status = 'paid'
-        else:
-            order.status = 'payment_failed'
+    return render(request, 'payment.html', {'form': form})
 
-        order.save()
-
-        # Отправка ответа, чтобы уведомить платежную систему, что все прошло успешно
-        return HttpResponse('OK')
-
-    return HttpResponse('Method not allowed', status=405)

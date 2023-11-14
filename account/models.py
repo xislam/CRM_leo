@@ -510,15 +510,8 @@ class Mailing(models.Model):
         verbose_name_plural = _('Рассылки')
 
 
-# Добавление
-class Order(models.Model):
-    # Поля для хранения информации о заказе
-    # ...
-    payment_status = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return self.payment_status
-
-    class Meta:
-        verbose_name = _('Заказ')
-        verbose_name_plural = _('Заказы')
+### Добавление
+class Payment(models.Model):
+    transaction_id = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=100)
