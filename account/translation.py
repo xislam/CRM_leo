@@ -58,7 +58,7 @@ class GroupStudentTranslationOptions(TranslationOptions):
 
 @register(Project)
 class ProjectTranslationOptions(TranslationOptions):
-    fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'grade',)
+    fields = ('group', 'name', 'intricacy', 'start_date', 'end_date')
 
 
 @register(Comment)
@@ -93,7 +93,7 @@ class TaskStatusGroupTranslationOptions(TranslationOptions):
 
 @register(TaskStudent)
 class TaskStudentTranslationOptions(TranslationOptions):
-    fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date', 'grade')
+    fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date')
 
 
 @register(TaskStatusStudent)

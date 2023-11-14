@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
-from django.db.models import Max, Sum, Count
+from django.db.models import Max, Sum, Count, Avg
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 
@@ -137,8 +137,13 @@ class Student(models.Model):
     hours_per_week = models.PositiveIntegerField(verbose_name=_('Сколько часов готовы уделять в неделю'))
     telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
     projects = models.ManyToManyField('Project', related_name='students', blank=True, verbose_name=_('Проекты'))
+
+
+    
+
     total_rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
     subscription_end_date = models.DateField(verbose_name='Дата окончания подиски', blank=True, null=True)
+
 
     def __str__(self):
         return self.full_name
@@ -154,7 +159,9 @@ class Student(models.Model):
             total=Sum('num_projects'))['total']
         return project_count
 
-    # projects_in_group.short_description = 'Количество проектов в группе'
+    def calculate_total_rating(self):
+        total_rating = self.student.aggregate(Sum('task_rating'))['task_rating__sum'] or 0
+        return total_rating
 
     class Meta:
         verbose_name = _('Студент')
@@ -220,12 +227,9 @@ class Project(models.Model):
     intricacy = models.CharField(max_length=250, verbose_name=_('Сложность'))
     start_date = models.DateField(verbose_name=_('Дата начала'), null=True, blank=True)
     end_date = models.DateField(verbose_name=_('Дата окончания'), null=True, blank=True)
-    grade = models.CharField(max_length=250, default=0, verbose_name=_('Оценка'))
-    group_grade = models.FloatField(max_length=10, default=0, verbose_name=_('Групповая оценка'))
-    personal_grade = models.FloatField(max_length=10, default=0, verbose_name=_('Личная оценка'))
-    deadline_compliance = models.FloatField(max_length=10, default=0, verbose_name=_('Соблюдение дедлайнов'))
-    manager_recommendation = models.FloatField(max_length=10, default=0, verbose_name=_('Рекомендация менеджера'))
-    intricacy_coefficient = models.FloatField(max_length=10, default=0, verbose_name=_('Коэффициент сложности'),
+    group_grade = models.FloatField(max_length=10, verbose_name=_('Групповая оценка'), blank=True, null=True)
+    intricacy_coefficient = models.FloatField(max_length=10, verbose_name='Коэффициент сложности',
+                                              blank=True, null=True,
                                               validators=[MinValueValidator(0), MaxValueValidator(1.5)])
 
     def __str__(self):
@@ -237,16 +241,39 @@ class Project(models.Model):
             return (self.end_date - self.start_date).days
         return None
 
-    def calculate_project_grade(self):
-        if self.start_date and self.end_date:
-            grade = (0.3 * self.group_grade + 0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
-                     0.2 * self.manager_recommendation) * self.intricacy_coefficient
-            return grade
-        return None
+    def calculate_task_rating(self):
+        if (
+                self.task.all().filter(personal_grade__isnull=False).exists() and
+                self.task.filter(deadline_compliance__isnull=False).exists() and
+                self.task.filter(manager_recommendation__isnull=False).exists() and
+                self.group_grade is not None and
+                self.intricacy_coefficient is not None
+        ):
+            personal_grade_avg = self.task.filter(personal_grade__isnull=False).aggregate(Avg('personal_grade'))[
+                'personal_grade__avg']
+            deadline_compliance_avg = \
+            self.task.filter(deadline_compliance__isnull=False).aggregate(Avg('deadline_compliance'))[
+                'deadline_compliance__avg']
+            manager_recommendation_avg = \
+            self.task.filter(manager_recommendation__isnull=False).aggregate(Avg('manager_recommendation'))[
+                'manager_recommendation__avg']
+
+            rating = round(
+                (
+                        0.3 * personal_grade_avg +
+                        0.2 * deadline_compliance_avg +
+                        0.2 * manager_recommendation_avg +
+                        0.3 * self.group_grade
+                ) * self.intricacy_coefficient, 1
+            )
+            return rating
 
     def save(self, *args, **kwargs):
-        self.grade = self.calculate_project_grade()
         super().save(*args, **kwargs)
+        task_rating = self.calculate_task_rating()
+        for task in self.task.all():
+            task.task_rating = task_rating
+            task.save()
 
     class Meta:
         verbose_name = _('Проект')
@@ -367,16 +394,25 @@ class TaskStatusGroup(models.Model):
 
 
 class TaskStudent(models.Model):
-    project = models.ForeignKey(Project, verbose_name=_('Проект'), on_delete=models.CASCADE, null=True, blank=True)
-    student = models.ForeignKey(Student, verbose_name=_('Студент'), on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, verbose_name=_('Проект'), on_delete=models.CASCADE, null=True, blank=True,
+                                related_name='task')
+    student = models.ForeignKey(Student, verbose_name=_('Студент'), on_delete=models.CASCADE, related_name='student')
     description = models.TextField(verbose_name=_('Описание'))
     project_cost = models.CharField(max_length=120, verbose_name=_("Стоимость"), null=True, blank=True)
     start_date = models.DateField(verbose_name=_('Дата начала'), null=True, blank=True)
     end_date = models.DateField(verbose_name=_('Дата окончания'), null=True, blank=True)
-    grade = models.IntegerField(verbose_name=_('оценка'), null=True, blank=True)
+    personal_grade = models.FloatField(max_length=10, verbose_name=_('Личная оценка'), blank=True, null=True)
+    deadline_compliance = models.FloatField(max_length=10, verbose_name=_('Соблюдение дедлайнов'), blank=True,
+                                            null=True)
+    manager_recommendation = models.FloatField(max_length=10, verbose_name=_('Рекомендация менеджера'), blank=True,
+                                               null=True)
+    task_rating = models.FloatField(max_length=255, verbose_name='Рейтинг за задачу', blank=True, null=True)
 
     def __str__(self):
-        return self.student.full_name
+        if self.student:
+            return self.student.full_name
+        else:
+            return "No student assigned"
 
     @property
     def execution_period(self):
@@ -384,23 +420,23 @@ class TaskStudent(models.Model):
             return (self.end_date - self.start_date).days
         return None
 
-    def calculate_total_rating(self):
-        project_grades = self.student.projects.aggregate(Sum('grade'))['grade__sum'] or 0
-        task_grades = self.student.taskstudent_set.aggregate(Sum('grade'))['grade__sum'] or 0
-        total_rating = (project_grades + task_grades) * 0.5
-        return total_rating
+    def calculate_task_rating(self):
+        if self.personal_grade is not None and self.deadline_compliance is not None and \
+                self.manager_recommendation is not None and self.project.group_grade is not None and \
+                self.project.intricacy_coefficient is not None:
+            rating = round((0.3 * self.personal_grade + 0.2 * self.deadline_compliance +
+                            0.2 * self.manager_recommendation + 0.3 * self.project.group_grade)
+                           * self.project.intricacy_coefficient, 1)
+            return rating
 
     def save(self, *args, **kwargs):
+        task_rating = self.calculate_task_rating()
+        self.task_rating = task_rating
         super().save(*args, **kwargs)
-        total_rating = self.calculate_total_rating()
-        student = self.student
-        if student:
-            student.total_rating = total_rating
-            student.save()  # Сохраняем обновлен
 
     class Meta:
-        verbose_name = _('Задача студента по проекту')
-        verbose_name_plural = _('Задача студента по проекту')
+        verbose_name = 'Задача студента по проекту'
+        verbose_name_plural = 'Задача студента по проекту'
 
 
 class AnswersStudent(models.Model):

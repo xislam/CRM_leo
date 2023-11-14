@@ -125,8 +125,7 @@ class GroupStudentForm(TranslationModelForm):
 class ProjectForm(TranslationModelForm):
     class Meta:
         model = Project
-        fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'grade', 'group_grade', 'personal_grade',
-                  'deadline_compliance', 'manager_recommendation', 'intricacy_coefficient')
+        fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'group_grade', 'intricacy_coefficient')
 
 
 class CommentForm(TranslationModelForm):
@@ -168,7 +167,8 @@ class TaskStatusGroupForm(TranslationModelForm):
 class TaskStudentForm(TranslationModelForm):
     class Meta:
         model = TaskStudent
-        fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date', 'grade')
+        fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date',  'personal_grade',
+                  'deadline_compliance', 'manager_recommendation')
 
 
 class AnswersStudentForm(TranslationModelForm):
