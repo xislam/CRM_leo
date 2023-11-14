@@ -183,7 +183,14 @@ class DataKnowledgeFreeFileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SubscriptionEndDateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['subscription_end_date']
+
+
 class OrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Orders
         fields = '__all__'
+

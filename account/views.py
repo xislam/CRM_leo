@@ -31,7 +31,9 @@ from .serializers import StudentSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
     CourseSerializer, DataKnowledgeFileSerializer, \
 
-    DataKnowledgeFreeFileSerializer, OrdersSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    DataKnowledgeFreeFileSerializer, \
+    SubscriptionEndDateSerializer, OrdersSerializer
+
 
 
 
@@ -311,6 +313,12 @@ class DataKnowledgeFreeByChapter(generics.ListAPIView):
         return DataKnowledgeFree.objects.filter(chapter__name=chapter)
 
 
+
+class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = SubscriptionEndDateSerializer
+
 class OrdersListApiView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
+

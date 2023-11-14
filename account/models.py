@@ -99,12 +99,12 @@ MANAGER_STATUSES = [
 ]
 
 EDUCATION_STATUSES = [
-    (_('Registration for Free Subscription'), _('Регистрация на бесплатную подписку')),
-    (_('Completed Free Subscription'), _('Завершена бесплатная подписка')),
-    (_('Paid Subscription Participant'), _('Участник платной подписки')),
-    (_('Course Participant'), _('Участник курса')),
+    (_('Base'), _('Базовый')),
+    (_('Optimal'), _('Оптимальный')),
+    (_('Advanced'), _('Продвинутый')),
+    (_('Free participation'), _('Басплатное участие')),
     (_('Dropout'), _('Выбыл')),
-    (_('Completed Education'), _('Завершил обучение')),
+    (_('Grant'), _('Грант')),
 ]
 
 
@@ -138,6 +138,7 @@ class Student(models.Model):
     telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
     projects = models.ManyToManyField('Project', related_name='students', blank=True, verbose_name=_('Проекты'))
     total_rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
+    subscription_end_date = models.DateField(verbose_name='Дата окончания подиски', blank=True, null=True)
 
     def __str__(self):
         return self.full_name

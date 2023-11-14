@@ -101,7 +101,7 @@ class StudentForm(TranslationModelForm):
         fields = ('full_name', 'mobile_phone', 'email', 'tg_nickname', 'age', 'gender', 'before_university',
                   'university', 'faculty', 'course', 'interest_first', 'other_interest_first', 'interest_second',
                   'other_interest_second', 'interest_third', 'other_interest_third', 'manager_status',
-                  'education_status', 'hours_per_week', 'projects','telegram_user_id')
+                  'education_status', 'hours_per_week', 'projects','telegram_user_id','subscription_end_date')
 
 
 class StudentCVForm(TranslationModelForm):
