@@ -4,7 +4,7 @@ from modeltranslation.forms import TranslationModelForm
 from account.models import University, Course, BeforeUniversity, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, Student, StudentCV, StudentPortfolio, GroupStudent, Project, Comment, TestTask, AnswerTestTask, \
     TaskGroup, AnswerGroup, TaskStatusGroup, TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
-    UnderSection, DataKnowledge
+    UnderSection, DataKnowledge, Orders
 
 
 class StudentFilterForm(forms.Form):
@@ -101,7 +101,7 @@ class StudentForm(TranslationModelForm):
         fields = ('full_name', 'mobile_phone', 'email', 'tg_nickname', 'age', 'gender', 'before_university',
                   'university', 'faculty', 'course', 'interest_first', 'other_interest_first', 'interest_second',
                   'other_interest_second', 'interest_third', 'other_interest_third', 'manager_status',
-                  'education_status', 'hours_per_week', 'projects','telegram_user_id')
+                  'education_status', 'hours_per_week', 'projects','telegram_user_id','subscription_end_date')
 
 
 class StudentCVForm(TranslationModelForm):
@@ -211,3 +211,8 @@ class MailingTranslationForm(TranslationModelForm):
     class Meta:
         model = Mailing
         fields = ('subject', 'title', 'message', 'photo', 'student')
+
+class OrdersForm(TranslationModelForm):
+    class Meta:
+        model = Orders
+        fields = '__all__'
