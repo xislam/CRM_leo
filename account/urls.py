@@ -2,11 +2,7 @@ from django.urls import path
 
 from . import views
 from .views import StudentCreateView, StudentDetailUpdateView, StudentListView, StudentListMailingView, CourseListView, \
-
     StudentCvCreateView, SubscriptionEndDateView, OrdersListApiView
-
- 
-
 
 urlpatterns = [
     path('create/', StudentCreateView.as_view(), name='student-create'),
@@ -33,7 +29,7 @@ urlpatterns = [
     path('taskstatusstudents/', views.TaskStatusStudentListView.as_view(), name='taskstatusstudent-list'),
     path('dataknowledgefree/', views.DataKnowledgeFreeListView.as_view(), name='dataknowledgefree-list'),
     path('dataknowledge/', views.DataKnowledgeListView.as_view(), name='dataknowledge-list'),
-    path('courses/', CourseListView.as_view(), name='course-list'),    
+    path('courses/', CourseListView.as_view(), name='course-list'),
     path('dataknowledge/<str:chapter>/', views.DataKnowledgeByChapter.as_view(), name='dataknowledge-by-chapter'),
     path('dataknowledgefree/<str:chapter>/', views.DataKnowledgeFreeByChapter.as_view(),
          name='dataknowledgefree-by-chapter'),
@@ -42,6 +38,5 @@ urlpatterns = [
     path('subscription-end-date/<int:pk>', SubscriptionEndDateView.as_view(), name='subscription-end-date'),
 
     path('orders/', OrdersListApiView.as_view(), name='orders'),
-
 
 ]

@@ -29,12 +29,8 @@ from .serializers import StudentSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
-    CourseSerializer, DataKnowledgeFileSerializer, \
-
-    DataKnowledgeFreeFileSerializer, \
+    CourseSerializer, DataKnowledgeFileSerializer, TaskStudentsSerializer, DataKnowledgeFreeFileSerializer, \
     SubscriptionEndDateSerializer, OrdersSerializer
-
-
 
 
 class StudentCreateView(CreateAPIView):
@@ -313,12 +309,11 @@ class DataKnowledgeFreeByChapter(generics.ListAPIView):
         return DataKnowledgeFree.objects.filter(chapter__name=chapter)
 
 
-
 class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all()
     serializer_class = SubscriptionEndDateSerializer
 
+
 class OrdersListApiView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
-

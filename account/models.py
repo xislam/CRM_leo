@@ -133,14 +133,9 @@ class Student(models.Model):
     manager_status = models.CharField(max_length=50, choices=MANAGER_STATUSES, verbose_name=_('Статус менеджера'))
     education_status = models.CharField(max_length=50, choices=EDUCATION_STATUSES, verbose_name=_('Статус обучения'))
 
-    # Дополнительное поле
     hours_per_week = models.PositiveIntegerField(verbose_name=_('Сколько часов готовы уделять в неделю'))
     telegram_user_id = models.IntegerField(unique=True, null=True, blank=True, verbose_name='Телеграм ID User')
     projects = models.ManyToManyField('Project', related_name='students', blank=True, verbose_name=_('Проекты'))
-
-
-    
-
     total_rating = models.FloatField(max_length=255, default=0, verbose_name=_('Общий рейтинг'))
     subscription_end_date = models.DateField(verbose_name='Дата окончания подиски', blank=True, null=True)
 
@@ -435,8 +430,8 @@ class TaskStudent(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = 'Задача студента по проекту'
-        verbose_name_plural = 'Задача студента по проекту'
+        verbose_name = _('Задача студента по проекту')
+        verbose_name_plural = _('Задача студента по проекту')
 
 
 class AnswersStudent(models.Model):
@@ -450,8 +445,8 @@ class AnswersStudent(models.Model):
         return str(self.url)
 
     class Meta:
-        verbose_name = 'Ответ студента'
-        verbose_name_plural = 'Ответ студента'
+        verbose_name = _('Ответ студента')
+        verbose_name_plural = _('Ответ студента')
 
 
 class TaskStatusStudent(models.Model):
@@ -469,14 +464,14 @@ class TaskStatusStudent(models.Model):
 
 class File(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Имя файла'), blank=True, null=True)
-    file = models.FileField(upload_to='Files', verbose_name='Файлы')
+    file = models.FileField(upload_to='Files', verbose_name=_('Файлы'))
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = ('Файл')
-        verbose_name_plural = ('Файлы')
+        verbose_name = _('Файл')
+        verbose_name_plural = _('Файлы')
 
 
 class DataKnowledgeFree(models.Model):
@@ -548,17 +543,17 @@ class Mailing(models.Model):
 
 
 class Orders(models.Model):
-    creation_date = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
-    student = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='orders', verbose_name='Студент')
-    description = models.TextField(verbose_name='Описание')
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма')
-    payment_status = models.BooleanField(default=False, verbose_name='Статус оплаты')
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
+    student = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='orders', verbose_name=_('Студент'))
+    description = models.TextField(verbose_name=_('Описание'))
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Сумма'))
+    payment_status = models.BooleanField(default=False, verbose_name=_('Статус оплаты'))
 
     def __str__(self):
         return str(self.student)
 
     class Meta:
-        verbose_name = 'Заказ'
-        verbose_name_plural = 'Заказы'
+        verbose_name = _('Заказ')
+        verbose_name_plural = _('Заказы')
 
 
