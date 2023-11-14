@@ -91,6 +91,12 @@ class TaskGroupSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class TaskStudentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskStudent
+        fields = '__all__'
+
+
 class AnswerGroupSerializer(serializers.ModelSerializer):
     tg_nickname = serializers.CharField(source='user.tg_nickname', read_only=True)
 
