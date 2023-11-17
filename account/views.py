@@ -12,7 +12,7 @@ from django_filters import rest_framework as filters
 from rest_framework.response import Response
 
 from .filters import StudentFilter
-from .forms import StudentFilterForm, MailingForm
+from .forms import StudentFilterForm, MailingForm, PaymentForm
 from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
@@ -308,6 +308,35 @@ class DataKnowledgeFreeByChapter(generics.ListAPIView):
         chapter = self.kwargs['chapter']
         return DataKnowledgeFree.objects.filter(chapter__name=chapter)
 
+
+# Добавление
+
+
+from django.shortcuts import render
+from robokassa.forms import RobokassaForm
+
+
+def payment(request):
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            sum = form.cleaned_data['sum']
+            inv_id = form.cleaned_data['inv_id']
+            email = form.cleaned_data['email']
+            description = form.cleaned_data['description']
+
+            robokassa = RobokassaForm(initial={
+                'OutSum': sum,
+                'InvId': inv_id,
+                'Email': email,
+                'Desc': description
+            })
+
+            return render(request, 'payment.html', {'form': robokassa})
+    else:
+        form = PaymentForm()
+
+    return render(request, 'payment.html', {'form': form})
 
 class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all()

@@ -542,6 +542,13 @@ class Mailing(models.Model):
         verbose_name_plural = _('Рассылки')
 
 
+
+### Добавление
+class Payment(models.Model):
+    transaction_id = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=100)
+
 class Orders(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True, verbose_name=_('дата создания'))
     student = models.ForeignKey('Student', on_delete=models.CASCADE, related_name='orders', verbose_name=_('Студент'))
@@ -555,5 +562,6 @@ class Orders(models.Model):
     class Meta:
         verbose_name = _('Заказ')
         verbose_name_plural = _('Заказы')
+
 
 
