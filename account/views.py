@@ -346,3 +346,45 @@ class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
 class OrdersListApiView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
+
+
+### Добавление 
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
+
+def robo_payment_callback(request):
+    # Логика обработки ответа от робокассы
+
+    # Получаем заказ, для которого пришел ответ
+    order_id = request.GET.get('InvId')  # Предполагается, что id заказа передается в GET параметре 'InvId'
+    order = get_object_or_404(Orders, id=order_id)
+    
+    # Обновляем статус оплаты в соответствии с ответом от робокассы
+    # Здесь необходимо заменить на ваш реальный код проверки статуса оплаты
+    # Предполагается, что статус оплаты передается в GET параметре 'OutSum'
+    robo_response = request.GET.get('OutSum')
+    order.payment_status = robo_response == 'Success'
+    
+    # Обновляем дату оплаты в случае успешной оплаты
+    if order.payment_status:
+        order.payment_date = now()
+    
+    # Сохраняем изменения
+    order.save()
+    
+    # Остальная логика обработки ответа и ответ клиенту
+    if order.payment_status:
+        # Оплата прошла успешно
+        
+        # Дополнительные действия, такие как обновление состояния заказа, отправка уведомления пользователю и т.д.
+        
+        # Отправляем ответ клиенту
+        return HttpResponse('SUCCESS')  # или другой нужный вам ответ
+    else:
+        # Оплата не прошла успешно
+        
+        # Дополнительные действия, такие как отправка уведомления пользователю о неуспешной оплате, возврат заказа или т.д.
+        
+        # Отправляем ответ клиенту
+        return HttpResponse('FAIL')  # или другой нужный вам ответ
