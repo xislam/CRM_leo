@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 from .result_handler import MyCustomResultURL
 from .views import StudentCreateView, StudentDetailUpdateView, StudentListView, StudentListMailingView, CourseListView, \
-    StudentCvCreateView
+    StudentCvCreateView, SubscriptionEndDateView, OrdersListApiView
 
 urlpatterns = [
     path('create/', StudentCreateView.as_view(), name='student-create'),
@@ -35,7 +35,14 @@ urlpatterns = [
     path('dataknowledgefree/<str:chapter>/', views.DataKnowledgeFreeByChapter.as_view(),
          name='dataknowledgefree-by-chapter'),
     path('create-student-cv/<int:telegram_user_id>', StudentCvCreateView.as_view(), name='create-student-cv'),
+
     # Добавления
     path('result/', MyCustomResultURL.as_view(), name='robokassa_result'),
+
+
+    path('subscription-end-date/<int:pk>', SubscriptionEndDateView.as_view(), name='subscription-end-date'),
+
+    path('orders/', OrdersListApiView.as_view(), name='orders'),
+    path('taskstudents/', views.TaskStudentsListView.as_view(), name='taskstudents-list'),
 
 ]

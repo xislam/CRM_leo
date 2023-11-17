@@ -17,7 +17,7 @@ from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
     TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, \
-    DataKnowledge, University, Course, File  # Предположим, у вас есть модель Student
+    DataKnowledge, University, Course, File, Orders  # Предположим, у вас есть модель Student
 from .serializers import StudentSerializer, \
     UserInterestsFirstSerializer, \
     UserInterestsSecondSerializer, \
@@ -29,8 +29,8 @@ from .serializers import StudentSerializer, \
     TaskStudentSerializer, AnswersStudentSerializer, \
     TaskStatusStudentSerializer, DataKnowledgeFreeSerializer, \
     DataKnowledgeSerializer, UniversitySerializer, \
-    CourseSerializer, DataKnowledgeFileSerializer, \
-    DataKnowledgeFreeFileSerializer  # Предположим, у вас есть сериализатор StudentSerializer
+    CourseSerializer, DataKnowledgeFileSerializer, TaskStudentsSerializer, DataKnowledgeFreeFileSerializer, \
+    SubscriptionEndDateSerializer, OrdersSerializer
 
 
 class StudentCreateView(CreateAPIView):
@@ -204,6 +204,21 @@ class TaskGroupListView(generics.ListAPIView):
     filterset_class = TaskGroupFilter
 
 
+class TaskStudentsFilter(django_filters.FilterSet):
+    class Meta:
+        model = TaskStudent
+        fields = {
+            'project__name': ['exact'],
+        }
+
+
+class TaskStudentsListView(generics.ListAPIView):
+    queryset = TaskStudent.objects.all()
+    serializer_class = TaskStudentsSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = TaskStudentsFilter
+
+
 class AnswerGroupListView(generics.ListCreateAPIView):
     queryset = AnswerGroup.objects.all()
     serializer_class = AnswerGroupSerializer
@@ -323,3 +338,11 @@ def payment(request):
 
     return render(request, 'payment.html', {'form': form})
 
+class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = SubscriptionEndDateSerializer
+
+
+class OrdersListApiView(generics.ListCreateAPIView):
+    queryset = Orders.objects.all()
+    serializer_class = OrdersSerializer

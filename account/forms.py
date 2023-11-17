@@ -4,7 +4,7 @@ from modeltranslation.forms import TranslationModelForm
 from account.models import University, Course, BeforeUniversity, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, Student, StudentCV, StudentPortfolio, GroupStudent, Project, Comment, TestTask, AnswerTestTask, \
     TaskGroup, AnswerGroup, TaskStatusGroup, TaskStudent, AnswersStudent, TaskStatusStudent, DataKnowledgeFree, Chapter, \
-    UnderSection, DataKnowledge
+    UnderSection, DataKnowledge, Orders
 
 
 class StudentFilterForm(forms.Form):
@@ -101,7 +101,7 @@ class StudentForm(TranslationModelForm):
         fields = ('full_name', 'mobile_phone', 'email', 'tg_nickname', 'age', 'gender', 'before_university',
                   'university', 'faculty', 'course', 'interest_first', 'other_interest_first', 'interest_second',
                   'other_interest_second', 'interest_third', 'other_interest_third', 'manager_status',
-                  'education_status', 'hours_per_week', 'projects', 'telegram_user_id')
+                  'education_status', 'hours_per_week', 'projects','telegram_user_id','subscription_end_date')
 
 
 class StudentCVForm(TranslationModelForm):
@@ -125,8 +125,7 @@ class GroupStudentForm(TranslationModelForm):
 class ProjectForm(TranslationModelForm):
     class Meta:
         model = Project
-        fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'grade', 'group_grade', 'personal_grade',
-                  'deadline_compliance', 'manager_recommendation', 'intricacy_coefficient')
+        fields = ('group', 'name', 'intricacy', 'start_date', 'end_date', 'group_grade', 'intricacy_coefficient')
 
 
 class CommentForm(TranslationModelForm):
@@ -168,7 +167,8 @@ class TaskStatusGroupForm(TranslationModelForm):
 class TaskStudentForm(TranslationModelForm):
     class Meta:
         model = TaskStudent
-        fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date', 'grade')
+        fields = ('project', 'student', 'description', 'project_cost', 'start_date', 'end_date',  'personal_grade',
+                  'deadline_compliance', 'manager_recommendation')
 
 
 class AnswersStudentForm(TranslationModelForm):
@@ -213,6 +213,7 @@ class MailingTranslationForm(TranslationModelForm):
         fields = ('subject', 'title', 'message', 'photo', 'student')
 
 
+
 ### Добавление
 class PaymentForm(forms.Form):
     """Класс PaymentForm используется для валидации и обработки данных, введенных пользователем
@@ -234,3 +235,9 @@ class PaymentForm(forms.Form):
     inv_id = forms.IntegerField()
     email = forms.EmailField()
     description = forms.CharField(max_length=100)
+
+class OrdersForm(TranslationModelForm):
+    class Meta:
+        model = Orders
+        fields = '__all__'
+

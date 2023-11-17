@@ -11,11 +11,11 @@ from account.forms import UserInterestsFirstForm, StudentForm, UserInterestsSeco
     GroupStudentForm, CourseForm, StudentCVForm, UniversityForm, BeforeUniversityForm, StudentPortfolioForm, \
     ChapterForm, UnderSectionForm, DataKnowledgeForm, DataKnowledgeFreeForm, TaskGroupForm, TaskStudentForm, \
     TestTaskForm, AnswersStudentForm, TaskStatusStudentForm, CommentForm, TaskStatusGroupForm, AnswerGroupForm, \
-    MailingTranslationForm, ProjectForm, AnswerTestTaskForm
+    MailingTranslationForm, ProjectForm, AnswerTestTaskForm, OrdersForm
 from account.models import Student, GroupStudent, StudentCV, StudentPortfolio, Project, Comment, TaskGroup, \
     TaskStudent, TaskStatusStudent, TaskStatusGroup, UserInterestsFirst, UserInterestsSecond, UserInterestsThird, \
     University, BeforeUniversity, Course, DataKnowledge, UnderSection, Chapter, Mailing, AnswerGroup, AnswersStudent, \
-    AnswerTestTask, TestTask, DataKnowledgeFree, File
+    AnswerTestTask, TestTask, DataKnowledgeFree, File, Orders
 
 
 class StudentCVInline(TabularInline):
@@ -39,21 +39,23 @@ class MailingSelectionForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
+
 from django.contrib import admin
 from .models import Student
+
+
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     form = StudentForm
-    list_display = ('full_name', 'university', 'course', 'hours_per_week', 'total_rating', 'projects_count')
-    list_filter = ('university', 'before_university', 'course', InterestFirstFilter, InterestSecondFilter, InterestThirdFilter)
+    list_display = ('full_name', 'university', 'course', 'hours_per_week', 'projects_count', 'total_rating')
+    list_filter = (
+        'university', 'before_university', 'course', InterestFirstFilter, InterestSecondFilter, InterestThirdFilter)
     search_fields = ('full_name', 'email', 'tg_nickname')
     actions = ['send_custom_email']
     inlines = [StudentCVInline, StudentPortfolioInline]
-    ordering = ('-total_rating',)
-
 
     def total_rating(self, obj):
-        return obj.calculate_total_rating()
+        return round(obj.calculate_total_rating(), 1)
 
     total_rating.short_description = 'Общий рейтинг'
 
@@ -169,13 +171,13 @@ class TaskStudentInline(TabularInline):
     model = TaskStudent
     form = TaskStudentForm
     fk_name = 'project'
+    extra = 1
 
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectForm
     inlines = [CommentInline, TaskStudentInline, TaskGroupInline]
-    readonly_fields = ('grade',)
 
 
 class TaskStatusStudentInline(TabularInline):
@@ -240,6 +242,13 @@ class TestTaskAdmin(admin.ModelAdmin):
     # Add the TaskStatusStudentInline to the inlines list
     inlines = [AnswerAnswerGroupInline]
 
+
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
     list_display = ('name', 'file')
+
+
+@admin.register(Orders)
+class OrdersAdmin(admin.ModelAdmin):
+    form = OrdersForm
+
