@@ -12,7 +12,7 @@ from django_filters import rest_framework as filters
 from rest_framework.response import Response
 
 from .filters import StudentFilter
-from .forms import StudentFilterForm, MailingForm
+from .forms import StudentFilterForm, MailingForm, PaymentForm
 from .models import Student, Mailing, UserInterestsFirst, UserInterestsSecond, \
     UserInterestsThird, BeforeUniversity, StudentCV, GroupStudent, Project, \
     Comment, User, AnswerTestTask, TaskGroup, AnswerGroup, TaskStatusGroup, \
@@ -309,6 +309,35 @@ class DataKnowledgeFreeByChapter(generics.ListAPIView):
         return DataKnowledgeFree.objects.filter(chapter__name=chapter)
 
 
+# Добавление
+
+
+from django.shortcuts import render
+from robokassa.forms import RobokassaForm
+
+
+def payment(request):
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            sum = form.cleaned_data['sum']
+            inv_id = form.cleaned_data['inv_id']
+            email = form.cleaned_data['email']
+            description = form.cleaned_data['description']
+
+            robokassa = RobokassaForm(initial={
+                'OutSum': sum,
+                'InvId': inv_id,
+                'Email': email,
+                'Desc': description
+            })
+
+            return render(request, 'payment.html', {'form': robokassa})
+    else:
+        form = PaymentForm()
+
+    return render(request, 'payment.html', {'form': form})
+
 class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all()
     serializer_class = SubscriptionEndDateSerializer
@@ -317,3 +346,45 @@ class SubscriptionEndDateView(generics.RetrieveUpdateAPIView):
 class OrdersListApiView(generics.ListCreateAPIView):
     queryset = Orders.objects.all()
     serializer_class = OrdersSerializer
+
+
+### Добавление 
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.utils.timezone import now
+
+def robo_payment_callback(request):
+    # Логика обработки ответа от робокассы
+
+    # Получаем заказ, для которого пришел ответ
+    order_id = request.GET.get('InvId')  # Предполагается, что id заказа передается в GET параметре 'InvId'
+    order = get_object_or_404(Orders, id=order_id)
+    
+    # Обновляем статус оплаты в соответствии с ответом от робокассы
+    # Здесь необходимо заменить на ваш реальный код проверки статуса оплаты
+    # Предполагается, что статус оплаты передается в GET параметре 'OutSum'
+    robo_response = request.GET.get('OutSum')
+    order.payment_status = robo_response == 'Success'
+    
+    # Обновляем дату оплаты в случае успешной оплаты
+    if order.payment_status:
+        order.payment_date = now()
+    
+    # Сохраняем изменения
+    order.save()
+    
+    # Остальная логика обработки ответа и ответ клиенту
+    if order.payment_status:
+        # Оплата прошла успешно
+        
+        # Дополнительные действия, такие как обновление состояния заказа, отправка уведомления пользователю и т.д.
+        
+        # Отправляем ответ клиенту
+        return HttpResponse('SUCCESS')  # или другой нужный вам ответ
+    else:
+        # Оплата не прошла успешно
+        
+        # Дополнительные действия, такие как отправка уведомления пользователю о неуспешной оплате, возврат заказа или т.д.
+        
+        # Отправляем ответ клиенту
+        return HttpResponse('FAIL')  # или другой нужный вам ответ

@@ -59,6 +59,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    ### Добавление
+    'django.middleware.csrf.CsrfViewMiddleware',
 
 ]
 
@@ -350,3 +352,13 @@ MODELTRANSLATION_LANGUAGES = ('en', 'es', 'ru')  # Список языков
 MODELTRANSLATION_FALLBACK_LANGUAGES = {'default': ('en',)}
 
 TRANSLATABLE_MODEL_MODULES = []
+
+# Добавление
+
+ROBOKASSA_LOGIN = 'your_login'
+ROBOKASSA_PASSWORD1 = 'your_password1'
+ROBOKASSA_PASSWORD2 = 'your_password2'
+ROBOKASSA_TEST_MODE = True  # Установите в False, когда будете тестировать в реальной среде
+ROBOKASSA_SUCCESS_URL = 'http://example.com/success/'
+ROBOKASSA_FAIL_URL = 'http://example.com/fail/'
+ROBOKASSA_RESULT_URL = 'http://example.com/result/'

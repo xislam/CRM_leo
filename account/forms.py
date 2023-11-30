@@ -212,7 +212,32 @@ class MailingTranslationForm(TranslationModelForm):
         model = Mailing
         fields = ('subject', 'title', 'message', 'photo', 'student')
 
+
+
+### Добавление
+class PaymentForm(forms.Form):
+    """Класс PaymentForm используется для валидации и обработки данных, введенных пользователем
+    в форму платежной информации. Он наследуется от класса forms.Form из модуля django.forms.
+    Внутри класса PaymentForm определены четыре поля, которые пользователь должен заполнить:
+    1. sum — это поле типа DecimalField, которое представляет собой число с плавающей запятой
+    с двумя десятичными знаками после запятой. Он используется для ввода суммы платежа.
+    Аргументы decimal_places=2 и max_digits=10 определяют количество десятичных знаков
+    и максимальное количество цифр в числе.
+    2. inv_id — это поле типа IntegerField, которое ожидает целочисленное значение.
+    Оно используется для ввода идентификатора счета.
+    3. email — это поле типа EmailField, предназначенное для ввода электронной почты.
+    Оно проверяет, что введенное значение является допустимым адресом электронной почты.
+    4. description — это поле типа CharField с максимальной длиной 100 символов.
+    Оно предназначено для ввода описания платежа.
+    После того, как пользователь заполнит форму, данные будут переданы обработчику
+    представления Django, который будет выполнять валидацию и обработку данных, введенных в форму."""
+    sum = forms.DecimalField(decimal_places=2, max_digits=10)
+    inv_id = forms.IntegerField()
+    email = forms.EmailField()
+    description = forms.CharField(max_length=100)
+
 class OrdersForm(TranslationModelForm):
     class Meta:
         model = Orders
         fields = '__all__'
+
