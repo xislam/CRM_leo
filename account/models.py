@@ -284,7 +284,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата создания'))
 
     def __str__(self):
-        return self.project
+        return str(self.project)
 
     class Meta:
         verbose_name = _('Комментарий')
@@ -299,7 +299,7 @@ class TestTask(models.Model):
     grade = models.IntegerField(verbose_name=_('оценка'), null=True, blank=True)
 
     def __str__(self):
-        return self.description
+        return str(self.description)
 
     @property
     def execution_period(self):
@@ -336,7 +336,7 @@ class TaskGroup(models.Model):
     grade = models.IntegerField(verbose_name=_('оценка'), null=True, blank=True)
 
     def __str__(self):
-        return self.description
+        return str(self.description)
 
     @property
     def execution_period(self):
@@ -405,9 +405,9 @@ class TaskStudent(models.Model):
 
     def __str__(self):
         if self.student:
-            return self.student.full_name
+            return srt(self.student.full_name)
         else:
-            return "No student assigned"
+            return str("No student assigned")
 
     @property
     def execution_period(self):
@@ -455,7 +455,7 @@ class TaskStatusStudent(models.Model):
     status = models.CharField(max_length=50, verbose_name=_('Статус'), choices=STATUS_CHOICES)
 
     def __str__(self):
-        return self.task_student
+        return str(self.task_student)
 
     class Meta:
         verbose_name = _('Статус задачи студента')
